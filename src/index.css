@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* Bricolage Grotesque — display (títulos, logo) */
+@import "@fontsource/bricolage-grotesque/500.css";
+@import "@fontsource/bricolage-grotesque/700.css";
+@import "@fontsource/bricolage-grotesque/800.css";
+
+/* Martian Mono — números (palpite, gabarito, placar, cronômetro) */
+@import "@fontsource/martian-mono/400.css";
+@import "@fontsource/martian-mono/500.css";
+@import "@fontsource/martian-mono/700.css";
+
+/* Instrument Sans — corpo (perguntas, rótulos, instruções) */
+@import "@fontsource/instrument-sans/400.css";
+@import "@fontsource/instrument-sans/500.css";
+
+/*
+ * Tokens do design system — ver .claude/skills/achometro-design/SKILL.md.
+ * Fonte da verdade única: mudar aqui, não em valores literais espalhados
+ * pelos componentes. O agente `achometro-ui` reprova cor/fonte fora daqui.
+ */
+@theme {
+  --color-esmalte: #0f3b3a;
+  --color-esmalte-2: #092a29;
+  --color-mostrador: #e8dcc0;
+  --color-latao: #c9a227;
+  --color-agulha: #d6402a;
+  --color-tinta: #14201f;
+
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-num: "Martian Mono", monospace;
+  --font-body: "Instrument Sans", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-esmalte);
+    color: var(--color-mostrador);
+    font-family: var(--font-body);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-latao);
+    outline-offset: 2px;
+  }
+}

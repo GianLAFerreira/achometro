@@ -1,0 +1,13 @@
+# AVISO: .claudeignore tem histórico documentado de ser ignorado/não aplicado
+# por Claude Code em algumas versões (issues #56997, #36163 do repo anthropics/claude-code).
+# Isto é defesa em profundidade, NÃO a proteção principal.
+# A proteção real: nenhum segredo de verdade (service_role key) entra neste repositório —
+# ela vive só no painel do Supabase. Ver CLAUDE.md.
+
+.env
+.env.*
+node_modules/
+dist/
+.supabase/
+supabase/.temp/
+*.log
