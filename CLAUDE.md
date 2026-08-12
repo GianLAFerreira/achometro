@@ -22,8 +22,13 @@ Plano completo: `C:\Users\gianf\.claude\plans\queriar-um-aplicativo-iremos-nifty
 
 1. **Regra de jogo mora em função Postgres, nunca no cliente.** Se der vontade de calcular
    pontuação ou validar tempo no React, a resposta é não.
-2. **Zero PII.** Nada de e-mail, senha, telefone, OAuth, nome real. `player_id` é um UUID gerado
-   no cliente e guardado em `localStorage` — identifica o navegador, não a pessoa.
+2. **Zero PII.** Nada de e-mail, senha, telefone, OAuth, nome real. `player_id` é o `auth.uid()`
+   de uma sessão de **login anônimo do Supabase** (`signInAnonymously`) — não um UUID inventado no
+   cliente. Correção feita durante a Fase 1: sem alguma forma de identidade verificável, o RLS não
+   tem como distinguir "sua sala" de "sala de outra pessoa" em nenhuma leitura, só nas escritas via
+   RPC. Login anônimo dá um `auth.uid()` real e verificável sem exigir e-mail, senha ou qualquer
+   dado pessoal — a sessão persiste via token que o próprio SDK guarda no `localStorage`, mesma
+   propriedade prática do plano original (limpar o navegador = virar outra pessoa).
 3. **RLS nega por padrão.** Toda tabela nova nasce fechada; abrir só o necessário.
 4. **`answers` de uma rodada aberta é ilegível por qualquer cliente.** Isso é privacidade e
    anti-trapaça na mesma regra. Testar sempre que essa política for tocada.
