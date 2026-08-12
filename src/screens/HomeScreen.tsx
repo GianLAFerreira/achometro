@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { FormEvent } from 'react'
+import { motion } from 'motion/react'
 import { TextField } from '../components/TextField'
 import { Button } from '../components/Button'
 import { Note } from '../components/Note'
@@ -7,6 +8,7 @@ import { useNickname } from '../state/useNickname'
 import { createRoom, peekRoom } from '../lib/rpc'
 import { describeError } from '../lib/errors'
 import { navigate, roomPath } from '../lib/router'
+import { DURATION_BASE, SPRING_NEEDLE, useReducedMotion } from '../lib/motion'
 
 const PEEK_MESSAGES: Record<string, string> = {
   not_found: 'Código não confere. Confira as 6 letras.',
@@ -16,6 +18,7 @@ const PEEK_MESSAGES: Record<string, string> = {
 }
 
 export function HomeScreen() {
+  const reduceMotion = useReducedMotion()
   const { nickname, setNickname } = useNickname()
   const [roomCode, setRoomCode] = useState('')
   const [creating, setCreating] = useState(false)
@@ -80,12 +83,26 @@ export function HomeScreen() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-12 px-6 py-16">
       <div className="text-center">
-        <h1 className="font-display text-5xl font-extrabold uppercase tracking-tight text-mostrador sm:text-7xl">
+        {/* Entrada do logo: mesmo spring do ponteiro do mostrador e da
+            cascata do placar final (SPRING_NEEDLE) — terceiro e último
+            momento com esse tratamento, deliberadamente reservado a
+            instantes de identidade, nunca espalhado pela interface. */}
+        <motion.h1
+          className="font-display text-5xl font-extrabold uppercase tracking-tight text-mostrador sm:text-7xl"
+          initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={reduceMotion ? { duration: 0 } : SPRING_NEEDLE}
+        >
           Achômetro
-        </h1>
-        <p className="mt-2 font-body text-base text-mostrador/80">
+        </motion.h1>
+        <motion.p
+          className="mt-2 font-body text-base text-mostrador/80"
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: DURATION_BASE, delay: 0.2 }}
+        >
           O medidor oficial do seu achismo.
-        </p>
+        </motion.p>
       </div>
 
       <div className="flex w-full max-w-sm flex-col gap-10">

@@ -114,11 +114,11 @@ só em transição de estado** (troca de tela, chegada de dado via Realtime, toq
 regressiva) — nunca decorativa ou ociosa. Se um elemento "pulsa sozinho" sem gatilho de estado, já
 saiu do escopo.
 
-`SPRING_NEEDLE` (overshoot + amortecimento) é usado em exatamente dois lugares: o ponteiro do
-mostrador e a cascata do placar final (fim de partida — `Scoreboard.tsx`, prop `isFinal`). Esse é
-o **único outro momento** com tratamento comparável ao mostrador: a lista entra em cascata por
-posição e o nome do vencedor ganha tamanho maior. Ainda só timing/tamanho/cor já-existente — nenhum
-componente novo ganha textura, bisel ou brilho por causa disto.
+`SPRING_NEEDLE` (overshoot + amortecimento) é usado em exatamente três lugares, e a lista não deve
+crescer sem decisão deliberada: o ponteiro do mostrador, a cascata do placar final (fim de partida —
+`Scoreboard.tsx`, prop `isFinal`) e a entrada do logo na Home (`HomeScreen.tsx`, primeiro contato
+com o app). Ainda só timing/tamanho/escala já-existente — nenhum componente novo ganha textura,
+bisel ou brilho por causa disto.
 
 Todo componente animado via `motion/react` checa `useReducedMotion()` (reexportado de
 `lib/motion.ts`) antes de aplicar overshoot, stagger ou `whileTap`. `src/index.css` tem uma regra

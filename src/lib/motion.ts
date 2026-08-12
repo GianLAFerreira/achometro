@@ -6,9 +6,10 @@
 // já saiu do escopo deste arquivo.
 import type { Transition } from 'motion/react'
 
-// Ponteiro do mostrador e a cascata do placar final: ultrapassa o alvo e
-// assenta com amortecimento, como instrumento físico de verdade — é o
-// único lugar do app com esse tipo de movimento (skill: "físca de
+// Ponteiro do mostrador, a cascata do placar final e a entrada do logo
+// na Home: ultrapassam o alvo e assentam com amortecimento, como
+// instrumento físico de verdade — reservado a esses três momentos
+// deliberados, nunca espalhado pela interface (skill: "física de
 // instrumento... um único momento orquestrado").
 export const SPRING_NEEDLE: Transition = {
   type: 'spring',
