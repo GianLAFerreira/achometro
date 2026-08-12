@@ -20,6 +20,8 @@ const MESSAGES: Record<string, string> = {
   round_time_over: 'Tempo esgotado.',
   not_in_room: 'Você não está nesta sala.',
   already_answered: 'Palpite já cravado.',
+  pause_in_progress: 'Aguarde a pausa entre rodadas terminar.',
+  room_closed: 'Essa partida já terminou.',
 }
 
 const FALLBACK = 'Não deu certo agora. Tenta de novo.'

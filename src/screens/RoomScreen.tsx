@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { useRoom } from '../state/useRoom'
 import { useNickname } from '../state/useNickname'
 import { useRoundCloser } from '../state/useRoundCloser'
+import { useRoundAdvancer } from '../state/useRoundAdvancer'
 import { Lobby } from '../components/Lobby'
 import { RoundOpen } from '../components/RoundOpen'
 import { RoundReveal } from '../components/RoundReveal'
@@ -30,11 +31,27 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
   const [feedback, setFeedback] = useState<string | null>(null)
 
   const currentRound = state.kind === 'ready' ? state.currentRound : null
+  const activePlayersCount = state.kind === 'ready' ? state.activePlayers.length : 0
+
   useRoundCloser({
     round: currentRound,
-    playersCount: state.kind === 'ready' ? state.players.length : 0,
+    activePlayersCount,
     isHost: state.kind === 'ready' && state.isHost,
     onClosed: resync,
+  })
+
+  // Avanço automático entre rodadas — depois da pausa de revelação,
+  // qualquer membro dispara start_round sozinho (o servidor valida que a
+  // pausa passou; ver migration pontuacao_inatividade_e_pausa). Só atua
+  // com a sala em 'playing': sair do lobby continua exclusivo do host,
+  // via handleStart abaixo.
+  const advancer = useRoundAdvancer({
+    round: currentRound,
+    roomId: state.kind === 'ready' ? state.room.id : '',
+    roomStatus: state.kind === 'ready' ? state.room.status : 'lobby',
+    pauseSeconds: state.kind === 'ready' ? state.room.pause_seconds : 10,
+    isHost: state.kind === 'ready' && state.isHost,
+    onAdvanced: resync,
   })
 
   const nicknameById = useMemo(() => {
@@ -65,6 +82,8 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
     [nickname, join],
   )
 
+  // Só dispara a primeira rodada (saída do lobby) — o avanço entre
+  // rodadas é automático, via useRoundAdvancer acima.
   const handleStart = useCallback(async () => {
     if (state.kind !== 'ready') return
     setStarting(true)
@@ -107,10 +126,21 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
     )
   }
 
-  const { room, players } = state
+  const { room, players, me } = state
 
   return (
     <div className="flex flex-col gap-10">
+      {/* Identidade do jogador, sempre visível — fonte é `me.nickname`
+          (servidor), nunca useNickname() (preferência do navegador, pode
+          divergir do apelido desta sala). `me` é null pra quem só está
+          vendo a sala sem ter dado join. */}
+      <div className="flex items-baseline justify-between font-body text-sm text-mostrador/60">
+        <p>{me ? `Você é ${me.nickname}` : 'Assistindo'}</p>
+        <p>
+          sala <span className="font-num text-latao">{room.code}</span>
+        </p>
+      </div>
+
       {room.status === 'lobby' && (
         <Lobby
           code={room.code}
@@ -128,7 +158,7 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
           unit={currentRound.question_unit}
           endsAt={currentRound.ends_at}
           answersCount={currentRound.answers_count}
-          playersCount={players.length}
+          playersCount={activePlayersCount}
         />
       )}
 
@@ -146,19 +176,23 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
               value: answer.value,
               submittedAt: answer.submitted_at,
             }))}
+            pauseSecondsRemaining={room.status === 'playing' ? advancer.remainingSeconds : null}
           />
-          {state.isHost && room.status !== 'finished' && (
-            <Button onClick={handleStart} disabled={starting}>
-              Próxima rodada
-            </Button>
+          {room.status === 'abandoned' && <Note tone="erro">Sala encerrada por inatividade.</Note>}
+          {room.status === 'finished' && (
+            <Note>
+              Partida encerrada.
+              {room.winner_player_id
+                ? ` Vencedor: ${nicknameById.get(room.winner_player_id) ?? '???'}`
+                : ''}
+            </Note>
           )}
-          {room.status === 'finished' && <Note>Partida encerrada.</Note>}
         </>
       )}
 
       {feedback && <Note tone="erro">{feedback}</Note>}
 
-      <Scoreboard players={players} highlightPlayerId={playerId} />
+      <Scoreboard players={players} highlightPlayerId={playerId} winnerPlayerId={room.winner_player_id} />
     </div>
   )
 }

@@ -11,20 +11,23 @@ interface RoundForCloser {
 
 interface UseRoundCloserArgs {
   round: RoundForCloser | null
-  playersCount: number
+  // Contagem de jogadores ATIVOS (missed_streak < 2), não do total da
+  // sala — senão uma rodada nunca fecha cedo enquanto houver gente com a
+  // aba fechada, que é o cenário que a inatividade existe para resolver.
+  activePlayersCount: number
   isHost: boolean
   onClosed: () => void
 }
 
 /**
  * Dispara close_round no momento certo. O host fecha assim que todo
- * mundo respondeu OU quando o tempo acaba; qualquer outro membro só fecha
- * depois do tempo, e com um pequeno atraso aleatório — rede de segurança
- * se o host sumir (aba fechada, sem rede), sem todo mundo na sala chamar
- * close_round no mesmo instante. O servidor é idempotente de qualquer
- * jeito (ver migration), isto só evita chamada desperdiçada.
+ * mundo ativo respondeu OU quando o tempo acaba; qualquer outro membro só
+ * fecha depois do tempo, e com um pequeno atraso aleatório — rede de
+ * segurança se o host sumir (aba fechada, sem rede), sem todo mundo na
+ * sala chamar close_round no mesmo instante. O servidor é idempotente de
+ * qualquer jeito (ver migration), isto só evita chamada desperdiçada.
  */
-export function useRoundCloser({ round, playersCount, isHost, onClosed }: UseRoundCloserArgs) {
+export function useRoundCloser({ round, activePlayersCount, isHost, onClosed }: UseRoundCloserArgs) {
   // Sentinela no futuro distante, não no passado: enquanto `round` é
   // null, `timeIsUp` deve ser `false` (o guard `!round` abaixo já
   // bloqueia qualquer disparo, mas um fallback "sempre esgotado" é uma
@@ -33,7 +36,8 @@ export function useRoundCloser({ round, playersCount, isHost, onClosed }: UseRou
   const remainingSeconds = useCountdown(round?.ends_at ?? FAR_FUTURE_ISO)
   const firedForRoundId = useRef<string | null>(null)
 
-  const allAnswered = round != null && playersCount > 0 && round.answers_count >= playersCount
+  const allAnswered =
+    round != null && activePlayersCount > 0 && round.answers_count >= activePlayersCount
   const timeIsUp = remainingSeconds <= 0
 
   useEffect(() => {

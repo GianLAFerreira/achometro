@@ -68,6 +68,7 @@ export type Database = {
           id: string
           joined_at: string
           last_seen_at: string
+          missed_streak: number
           nickname: string
           room_id: string
           score: number
@@ -76,6 +77,7 @@ export type Database = {
           id: string
           joined_at?: string
           last_seen_at?: string
+          missed_streak?: number
           nickname: string
           room_id: string
           score?: number
@@ -84,6 +86,7 @@ export type Database = {
           id?: string
           joined_at?: string
           last_seen_at?: string
+          missed_streak?: number
           nickname?: string
           room_id?: string
           score?: number
@@ -174,9 +177,11 @@ export type Database = {
           expires_at: string
           host_player_id: string
           id: string
+          pause_seconds: number
           rounds_total: number
           status: string
           themes: string[]
+          winner_player_id: string | null
         }
         Insert: {
           answer_seconds?: number
@@ -185,9 +190,11 @@ export type Database = {
           expires_at?: string
           host_player_id: string
           id?: string
+          pause_seconds?: number
           rounds_total?: number
           status?: string
           themes?: string[]
+          winner_player_id?: string | null
         }
         Update: {
           answer_seconds?: number
@@ -196,9 +203,11 @@ export type Database = {
           expires_at?: string
           host_player_id?: string
           id?: string
+          pause_seconds?: number
           rounds_total?: number
           status?: string
           themes?: string[]
+          winner_player_id?: string | null
         }
         Relationships: [
           {
@@ -329,9 +338,11 @@ export type Database = {
           expires_at: string
           host_player_id: string
           id: string
+          pause_seconds: number
           rounds_total: number
           status: string
           themes: string[]
+          winner_player_id: string | null
         }
         SetofOptions: {
           from: "*"
@@ -350,9 +361,11 @@ export type Database = {
           expires_at: string
           host_player_id: string
           id: string
+          pause_seconds: number
           rounds_total: number
           status: string
           themes: string[]
+          winner_player_id: string | null
         }
         SetofOptions: {
           from: "*"
@@ -361,6 +374,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      peek_room: { Args: { p_room_code: string }; Returns: string }
       server_now: { Args: never; Returns: string }
       start_round: {
         Args: { p_room_id: string }

@@ -4,14 +4,22 @@ import { TextField } from '../components/TextField'
 import { Button } from '../components/Button'
 import { Note } from '../components/Note'
 import { useNickname } from '../state/useNickname'
-import { createRoom } from '../lib/rpc'
+import { createRoom, peekRoom } from '../lib/rpc'
 import { describeError } from '../lib/errors'
 import { navigate, roomPath } from '../lib/router'
+
+const PEEK_MESSAGES: Record<string, string> = {
+  not_found: 'Código não confere. Confira as 6 letras.',
+  finished: 'Essa partida já terminou.',
+  abandoned: 'Essa sala foi encerrada por inatividade.',
+  empty: 'Essa sala está vazia.',
+}
 
 export function HomeScreen() {
   const { nickname, setNickname } = useNickname()
   const [roomCode, setRoomCode] = useState('')
   const [creating, setCreating] = useState(false)
+  const [checkingCode, setCheckingCode] = useState(false)
   const [feedback, setFeedback] = useState<string | null>(null)
 
   // create_room é RPC mutante — só a partir de um handler de submit,
@@ -38,18 +46,33 @@ export function HomeScreen() {
     [nickname],
   )
 
-  // Entrar por código não chama join_room aqui — só navega para
-  // /sala/CODE. A tela da sala pede o apelido e chama join_room, o mesmo
+  // Entrar por código valida com peek_room antes de navegar — sem isso, o
+  // código errado só aparecia depois de digitar o apelido na tela da sala
+  // (join_room só estoura o erro lá). peek_room não tem efeito colateral;
+  // quem de fato entra é join_room, chamado só pela tela da sala, o mesmo
   // caminho de quem abre um link compartilhado.
   const handleJoin = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       const trimmed = roomCode.trim()
       if (trimmed.length !== 6) {
         setFeedback('Código não confere. Confira as 6 letras.')
         return
       }
-      navigate(roomPath(trimmed))
+      setCheckingCode(true)
+      setFeedback(null)
+      try {
+        const verdict = await peekRoom(trimmed)
+        if (verdict === 'ok') {
+          navigate(roomPath(trimmed))
+        } else {
+          setFeedback(PEEK_MESSAGES[verdict] ?? 'Código não confere. Confira as 6 letras.')
+        }
+      } catch (error) {
+        setFeedback(describeError(error))
+      } finally {
+        setCheckingCode(false)
+      }
     },
     [roomCode],
   )
@@ -87,8 +110,9 @@ export function HomeScreen() {
             value={roomCode}
             onChange={(event) => setRoomCode(event.target.value.toUpperCase())}
             maxLength={6}
+            disabled={checkingCode}
           />
-          <Button type="submit" variant="secundario">
+          <Button type="submit" variant="secundario" disabled={checkingCode}>
             Entrar na sala
           </Button>
         </form>

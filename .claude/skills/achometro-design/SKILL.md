@@ -86,7 +86,7 @@ exclamação de entusiasmo — o aparelho não se desculpa.
 | Carregando rodada | `Aferindo` |
 | Sala vazia | `Ninguém aqui ainda. Passe o código 7K2M9P.` |
 | Erro de sala | `Código não confere. Confira as 6 letras.` |
-| Acerto < 5% de erro relativo | `Na mosca` |
+| Valor exato do gabarito | `Cravou` |
 | Fim de rodada | `Resposta: 1,7 bilhão` + fonte clicável |
 
 ## Piso de qualidade (não negociável)

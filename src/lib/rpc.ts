@@ -12,7 +12,7 @@ type AnswerRow = Database['public']['Tables']['answers']['Row']
 export async function createRoom(
   nickname: string,
   roundsTotal = 10,
-  answerSeconds = 45,
+  answerSeconds = 20,
 ): Promise<RoomRow> {
   const { data, error } = await supabase.rpc('create_room', {
     p_nickname: nickname,
@@ -31,6 +31,16 @@ export async function joinRoom(roomCode: string, nickname: string): Promise<Room
   })
   if (error) throw error
   return data
+}
+
+// Veredito sem efeito colateral, pra validar um código de sala antes de
+// pedir apelido — diferente de join_room, que já te coloca dentro da sala.
+export type RoomPeek = 'ok' | 'not_found' | 'finished' | 'abandoned' | 'empty'
+
+export async function peekRoom(roomCode: string): Promise<RoomPeek> {
+  const { data, error } = await supabase.rpc('peek_room', { p_room_code: roomCode })
+  if (error) throw error
+  return data as RoomPeek
 }
 
 export async function startRound(roomId: string): Promise<RoundRow> {

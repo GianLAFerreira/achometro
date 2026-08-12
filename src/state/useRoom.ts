@@ -25,6 +25,15 @@ export type RoomState =
       currentRound: RoundRow | null
       answers: AnswerRow[]
       isHost: boolean
+      // Pode ser `null` legitimamente: quem abre um link de sala sem dar
+      // join ainda (só quer ver o placar) enxerga a sala sem estar em
+      // `players`. É a fonte autoritativa do próprio apelido — nunca
+      // useNickname(), que é a preferência do NAVEGADOR, não da sala.
+      me: PlayerRow | null
+      // Ativo = menos de 2 faltas seguidas (players.missed_streak),
+      // decidido no servidor em close_round. Não é coluna separada, pra
+      // não ter dois estados podendo dessincronizar.
+      activePlayers: PlayerRow[]
     }
 
 const RESYNC_DEBOUNCE_MS = 80
@@ -60,6 +69,8 @@ export function useRoom(roomCode: string, playerId: string | null) {
           currentRound: snapshot.currentRound,
           answers: snapshot.answers,
           isHost: playerId != null && snapshot.room.host_player_id === playerId,
+          me: snapshot.players.find((p) => p.id === playerId) ?? null,
+          activePlayers: snapshot.players.filter((p) => p.missed_streak < 2),
         })
       } catch (error) {
         setState({ kind: 'error', message: describeError(error) })

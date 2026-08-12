@@ -15,13 +15,17 @@ interface RoundRevealProps {
   asOfYear: number
   unit: string | null
   answers: RevealAnswer[]
+  // null = pausa não se aplica (partida encerrada/abandonada); do
+  // contrário, segundos até o avanço automático da próxima rodada.
+  pauseSecondsRemaining: number | null
 }
 
 // Container fino de propósito — o mostrador logarítmico da Fase 4 (skill
 // achometro-design) entra aqui sem reescrever o resto da tela. Erro
 // relativo é recalculado aqui só para EXIBIÇÃO (a pontuação real já foi
 // decidida e aplicada pelo Postgres em close_round); não é a mesma coisa
-// que a regra de jogo morar no cliente.
+// que a regra de jogo morar no cliente. "Cravou" exige valor EXATO — igual
+// à regra de pontuação (1 mais perto / 2 cravou), não mais o limiar de 5%.
 export function RoundReveal({
   revealedAnswer,
   sourceName,
@@ -29,10 +33,12 @@ export function RoundReveal({
   asOfYear,
   unit,
   answers,
+  pauseSecondsRemaining,
 }: RoundRevealProps) {
   const ranked = [...answers]
     .map((answer) => ({
       ...answer,
+      cravou: answer.value === revealedAnswer,
       erro:
         revealedAnswer === 0
           ? Math.abs(answer.value)
@@ -69,12 +75,18 @@ export function RoundReveal({
             >
               <span>{answer.nickname}</span>
               <span className="font-num">{formatInteger(answer.value)}</span>
-              <span className={answer.erro < 0.05 ? 'text-latao' : 'text-mostrador/60'}>
-                {answer.erro < 0.05 ? 'Na mosca' : `erro ${Math.round(answer.erro * 100)}%`}
+              <span className={answer.cravou ? 'text-latao' : 'text-mostrador/60'}>
+                {answer.cravou ? 'Cravou' : `erro ${Math.round(answer.erro * 100)}%`}
               </span>
             </li>
           ))}
         </ol>
+      )}
+
+      {pauseSecondsRemaining !== null && (
+        <p className="font-num text-sm text-mostrador/60">
+          Próxima rodada em {formatInteger(pauseSecondsRemaining)}
+        </p>
       )}
     </section>
   )

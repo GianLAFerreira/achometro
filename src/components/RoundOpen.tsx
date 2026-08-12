@@ -15,6 +15,8 @@ interface RoundOpenProps {
   unit: string | null
   endsAt: string
   answersCount: number
+  // Jogadores ATIVOS (missed_streak < 2), não o total da sala — quem
+  // ficou inativo não entra no "N de M cravaram".
   playersCount: number
 }
 
