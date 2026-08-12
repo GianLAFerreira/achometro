@@ -9,6 +9,7 @@ import { Lobby } from '../components/Lobby'
 import { RoundOpen } from '../components/RoundOpen'
 import { RoundReveal } from '../components/RoundReveal'
 import { Scoreboard } from '../components/Scoreboard'
+import { Podium } from '../components/Podium'
 import { Button } from '../components/Button'
 import { TextField } from '../components/TextField'
 import { Note } from '../components/Note'
@@ -219,11 +220,14 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
 
       {feedback && <Note tone="erro">{feedback}</Note>}
 
+      {room.status === 'finished' && (
+        <Podium players={players} highlightPlayerId={playerId} />
+      )}
+
       <Scoreboard
         players={players}
         highlightPlayerId={playerId}
         winnerPlayerId={room.winner_player_id}
-        isFinal={room.status === 'finished'}
       />
     </div>
   )

@@ -120,8 +120,9 @@ regressiva) — nunca decorativa ou ociosa. Se um elemento "pulsa sozinho" sem g
 saiu do escopo.
 
 `SPRING_NEEDLE` (overshoot + amortecimento) é usado em exatamente três lugares, e a lista não deve
-crescer sem decisão deliberada: o ponteiro do mostrador, a cascata do placar final (fim de partida —
-`Scoreboard.tsx`, prop `isFinal`) e a entrada do logo na Home (`HomeScreen.tsx`, primeiro contato
+crescer sem decisão deliberada: o ponteiro do mostrador, o pódio de fim de partida (`Podium.tsx`,
+top 3 por pontuação — substituiu a cascata que `Scoreboard.tsx` fazia antes, é troca do "momento de
+fim de partida", não um quarto uso) e a entrada do logo na Home (`HomeScreen.tsx`, primeiro contato
 com o app). Ainda só timing/tamanho/escala já-existente — nenhum componente novo ganha textura,
 bisel ou brilho por causa disto.
 

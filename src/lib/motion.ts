@@ -6,11 +6,13 @@
 // já saiu do escopo deste arquivo.
 import type { Transition } from 'motion/react'
 
-// Ponteiro do mostrador, a cascata do placar final e a entrada do logo
-// na Home: ultrapassam o alvo e assentam com amortecimento, como
-// instrumento físico de verdade — reservado a esses três momentos
-// deliberados, nunca espalhado pela interface (skill: "física de
-// instrumento... um único momento orquestrado").
+// Ponteiro do mostrador, o pódio de fim de partida (Podium.tsx) e a
+// entrada do logo na Home: ultrapassam o alvo e assentam com
+// amortecimento, como instrumento físico de verdade — reservado a esses
+// três momentos deliberados, nunca espalhado pela interface (skill:
+// "física de instrumento... um único momento orquestrado"). O pódio
+// substituiu a cascata que Scoreboard.tsx fazia antes (prop `isFinal`,
+// removida) — é troca do "momento de fim de partida", não crescimento.
 export const SPRING_NEEDLE: Transition = {
   type: 'spring',
   stiffness: 220,
