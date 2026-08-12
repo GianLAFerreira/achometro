@@ -32,6 +32,24 @@
   --font-body: "Instrument Sans", sans-serif;
 }
 
+/*
+ * Pulso de urgência do cronômetro (últimos segundos) — CSS puro, não
+ * motion/react, de propósito: um `animate` de motion com `repeat:
+ * Infinity` reinicia a cada re-render (o cronômetro re-renderiza a cada
+ * 250ms), o que quebraria o ritmo do pulso. CSS não depende de re-render
+ * pra continuar. Desativado por prefers-reduced-motion via a regra
+ * @media abaixo.
+ */
+@keyframes pulso-urgente {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
 @layer base {
   body {
     background-color: var(--color-esmalte);
@@ -42,5 +60,22 @@
   :focus-visible {
     outline: 2px solid var(--color-latao);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * Defesa em profundidade pra prefers-reduced-motion: as animações via
+ * motion/react já checam useReducedMotion() (ver src/lib/motion.ts), isto
+ * cobre as poucas transições puramente CSS (ex.: transition-colors do
+ * Button) que a lib não controla. "Sempre honrado" é piso não negociável
+ * da skill achometro-design.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

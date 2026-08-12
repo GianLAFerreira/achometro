@@ -1,8 +1,10 @@
-import type { ButtonHTMLAttributes } from 'react'
+import { motion } from 'motion/react'
+import type { HTMLMotionProps } from 'motion/react'
+import { useReducedMotion } from '../lib/motion'
 
 type Variant = 'primario' | 'secundario'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends HTMLMotionProps<'button'> {
   variant?: Variant
 }
 
@@ -18,6 +20,16 @@ const VARIANTS: Record<Variant, string> = {
   secundario: 'bg-esmalte-2 text-mostrador hover:bg-esmalte-2/70',
 }
 
+// Feedback de toque (whileTap) é o único "movimento" deste componente —
+// desativado com prefers-reduced-motion, mesma regra de qualquer outra
+// animação do app.
 export function Button({ variant = 'primario', className = '', ...rest }: ButtonProps) {
-  return <button className={`${BASE} ${VARIANTS[variant]} ${className}`} {...rest} />
+  const reduceMotion = useReducedMotion()
+  return (
+    <motion.button
+      whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+      className={`${BASE} ${VARIANTS[variant]} ${className}`}
+      {...rest}
+    />
+  )
 }
