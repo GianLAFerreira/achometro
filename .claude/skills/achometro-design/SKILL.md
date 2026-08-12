@@ -68,12 +68,29 @@ Ponteiros entram com física de instrumento: ultrapassam o alvo e assentam com a
 único momento orquestrado por rodada — nada de animação espalhada pela interface.
 `prefers-reduced-motion`: ponteiros aparecem já assentados, sem overshoot.
 
+**Domínio da escala é dinâmico, não fixo em 10³–10¹¹** (implementado em `src/components/
+Mostrador.tsx`): calculado a partir do gabarito + palpites de cada rodada, arredondado pra década
+abaixo/acima, com span mínimo de 2 décadas. O mockup acima é ilustrativo, não um range fixo.
+
+**Empilhamento de rótulo é por colisão real em pixel, não um percentual fixo de distância no eixo
+log.** Um limiar em % não escala com o tamanho do nome (até 16 caracteres) — testado ao vivo:
+resolvia nomes curtos colidindo e reabria com nomes longos. A implementação mede a largura real do
+track via `ResizeObserver` e estima a largura do rótulo por contagem de caractere, empacotando cada
+marcador na primeira linha (row) onde ele não sobrepõe o rótulo anterior — mesmo princípio de
+empacotamento de intervalo, não um número mágico. Rótulos de nome completos (não só o marcador) só
+aparecem em `sm:` e acima — no celular o mostrador mostra só régua + marcadores + gabarito; a lista
+detalhada por jogador (que já existia antes do mostrador) continua abaixo dele em qualquer largura,
+e é a fonte legível de detalhe.
+
 ## Regra de ousadia
 
 O mostrador é a **única** peça com tratamento de instrumento (textura, bisel, brilho). Todo o
 resto — botão, campo, lobby, navegação — é plano e disciplinado. Se textura ou bisel aparecer em
 dois lugares diferentes da interface, o desenho já saiu do controle: é o caminho direto para
-skeumorfismo datado em vez de instrumento elegante.
+skeumorfismo datado em vez de instrumento elegante. Indicadores funcionais em SVG plano que mudam
+por estado (ex.: o anel de progresso do cronômetro) não contam como esse tratamento — não têm
+textura, bisel ou brilho, só um traço colorido por token; a proibição é sobre ornamento
+skeuomórfico, não sobre qualquer elemento gráfico fora do mostrador.
 
 ## Voz da interface
 
@@ -88,6 +105,37 @@ exclamação de entusiasmo — o aparelho não se desculpa.
 | Erro de sala | `Código não confere. Confira as 6 letras.` |
 | Valor exato do gabarito | `Cravou` |
 | Fim de rodada | `Resposta: 1,7 bilhão` + fonte clicável |
+
+## Movimento
+
+Fonte única dos presets: `src/lib/motion.ts` (`SPRING_NEEDLE`, `EASE_SETTLE`, `DURATION_FAST`,
+`DURATION_BASE`) — mudar ali, não duplicar número de easing/duração num componente. Regra: **animação
+só em transição de estado** (troca de tela, chegada de dado via Realtime, toque, contagem
+regressiva) — nunca decorativa ou ociosa. Se um elemento "pulsa sozinho" sem gatilho de estado, já
+saiu do escopo.
+
+`SPRING_NEEDLE` (overshoot + amortecimento) é usado em exatamente dois lugares: o ponteiro do
+mostrador e a cascata do placar final (fim de partida — `Scoreboard.tsx`, prop `isFinal`). Esse é
+o **único outro momento** com tratamento comparável ao mostrador: a lista entra em cascata por
+posição e o nome do vencedor ganha tamanho maior. Ainda só timing/tamanho/cor já-existente — nenhum
+componente novo ganha textura, bisel ou brilho por causa disto.
+
+Todo componente animado via `motion/react` checa `useReducedMotion()` (reexportado de
+`lib/motion.ts`) antes de aplicar overshoot, stagger ou `whileTap`. `src/index.css` tem uma regra
+`@media (prefers-reduced-motion: reduce)` global como defesa em profundidade pras poucas transições
+puramente CSS (ex.: `transition-colors` do Button, o pulso de urgência do cronômetro).
+
+Vibração (Web Vibration API, `src/lib/haptics.ts`) em exatamente 2 momentos no mobile: cravar
+palpite e abertura da revelação. Sem terceiro, sem prompt de permissão, no-op silencioso em iOS
+Safari.
+
+## Mobile e breakpoints
+
+Mobile-first de verdade: a base (sem prefixo) é o telefone; `sm:`/`md:` só *adicionam* — aumentam
+escala tipográfica, densidade ou revelam rótulo, nunca mudam a estrutura do layout de telefone. O
+mostrador é o exemplo: régua + marcadores no celular, rótulos de nome só a partir de `sm:`.
+`index.html` declara `viewport-fit=cover`; o container raiz (`App.tsx`) reserva
+`env(safe-area-inset-bottom)` pra não colidir com a barra de gestos do iPhone.
 
 ## Piso de qualidade (não negociável)
 
