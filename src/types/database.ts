@@ -180,6 +180,7 @@ export type Database = {
           pause_seconds: number
           rounds_total: number
           status: string
+          target_score: number
           themes: string[]
           winner_player_id: string | null
         }
@@ -193,6 +194,7 @@ export type Database = {
           pause_seconds?: number
           rounds_total?: number
           status?: string
+          target_score?: number
           themes?: string[]
           winner_player_id?: string | null
         }
@@ -206,6 +208,7 @@ export type Database = {
           pause_seconds?: number
           rounds_total?: number
           status?: string
+          target_score?: number
           themes?: string[]
           winner_player_id?: string | null
         }
@@ -328,7 +331,9 @@ export type Database = {
         Args: {
           p_answer_seconds?: number
           p_nickname: string
+          p_pause_seconds?: number
           p_rounds_total?: number
+          p_target_score?: number
           p_themes?: string[]
         }
         Returns: {
@@ -341,6 +346,7 @@ export type Database = {
           pause_seconds: number
           rounds_total: number
           status: string
+          target_score: number
           themes: string[]
           winner_player_id: string | null
         }
@@ -364,6 +370,7 @@ export type Database = {
           pause_seconds: number
           rounds_total: number
           status: string
+          target_score: number
           themes: string[]
           winner_player_id: string | null
         }
