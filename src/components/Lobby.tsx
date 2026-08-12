@@ -1,5 +1,7 @@
+import { AnimatePresence, motion } from 'motion/react'
 import { Button } from './Button'
 import { Note } from './Note'
+import { DURATION_FAST, useReducedMotion } from '../lib/motion'
 
 interface LobbyPlayer {
   id: string
@@ -15,6 +17,8 @@ interface LobbyProps {
 }
 
 export function Lobby({ code, players, isHost, onStart, starting }: LobbyProps) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <section className="flex flex-col gap-6">
       <div>
@@ -23,11 +27,21 @@ export function Lobby({ code, players, isHost, onStart, starting }: LobbyProps) 
       </div>
 
       <ul className="flex flex-col gap-1">
-        {players.map((player) => (
-          <li key={player.id} className="font-body text-sm text-mostrador">
-            {player.nickname}
-          </li>
-        ))}
+        <AnimatePresence initial={false}>
+          {players.map((player) => (
+            <motion.li
+              key={player.id}
+              layout={!reduceMotion}
+              initial={reduceMotion ? false : { opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: DURATION_FAST }}
+              className="font-body text-sm text-mostrador"
+            >
+              {player.nickname}
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
 
       {players.length <= 1 && <Note>Ninguém aqui ainda. Passe o código {code}.</Note>}

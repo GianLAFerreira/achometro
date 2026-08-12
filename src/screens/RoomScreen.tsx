@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useRoom } from '../state/useRoom'
 import { useNickname } from '../state/useNickname'
 import { useRoundCloser } from '../state/useRoundCloser'
@@ -13,6 +14,7 @@ import { TextField } from '../components/TextField'
 import { Note } from '../components/Note'
 import { startRound } from '../lib/rpc'
 import { describeError } from '../lib/errors'
+import { FADE_TRANSITION, useReducedMotion } from '../lib/motion'
 
 interface RoomScreenProps {
   code: string
@@ -29,6 +31,7 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
   const [joining, setJoining] = useState(false)
   const [starting, setStarting] = useState(false)
   const [feedback, setFeedback] = useState<string | null>(null)
+  const reduceMotion = useReducedMotion()
 
   const currentRound = state.kind === 'ready' ? state.currentRound : null
   const activePlayersCount = state.kind === 'ready' ? state.activePlayers.length : 0
@@ -128,71 +131,98 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
 
   const { room, players, me } = state
 
+  // Chave de fase: muda exatamente quando a tela deveria trocar (lobby →
+  // rodada aberta → revelação). Deriva só do estado do servidor, mesmo
+  // princípio de RoomScreen inteiro — nunca um useState de fase local.
+  const phaseKey =
+    room.status === 'lobby' ? 'lobby' : currentRound ? `round-${currentRound.status}` : 'empty'
+
   return (
     <div className="flex flex-col gap-10">
       {/* Identidade do jogador, sempre visível — fonte é `me.nickname`
           (servidor), nunca useNickname() (preferência do navegador, pode
           divergir do apelido desta sala). `me` é null pra quem só está
           vendo a sala sem ter dado join. */}
-      <div className="flex items-baseline justify-between font-body text-sm text-mostrador/60">
-        <p>{me ? `Você é ${me.nickname}` : 'Assistindo'}</p>
-        <p>
+      <div className="flex items-baseline justify-between gap-4 font-body text-sm text-mostrador/60">
+        <p className="min-w-0 truncate">{me ? `Você é ${me.nickname}` : 'Assistindo'}</p>
+        <p className="shrink-0">
           sala <span className="font-num text-latao">{room.code}</span>
         </p>
       </div>
 
-      {room.status === 'lobby' && (
-        <Lobby
-          code={room.code}
-          players={players}
-          isHost={state.isHost}
-          onStart={handleStart}
-          starting={starting}
-        />
-      )}
-
-      {room.status !== 'lobby' && currentRound && currentRound.status === 'open' && (
-        <RoundOpen
-          roundId={currentRound.id}
-          prompt={currentRound.question_prompt}
-          unit={currentRound.question_unit}
-          endsAt={currentRound.ends_at}
-          answersCount={currentRound.answers_count}
-          playersCount={activePlayersCount}
-        />
-      )}
-
-      {room.status !== 'lobby' && currentRound && currentRound.status === 'closed' && (
-        <>
-          <RoundReveal
-            revealedAnswer={currentRound.revealed_answer ?? 0}
-            sourceName={currentRound.revealed_source_name ?? ''}
-            sourceUrl={currentRound.revealed_source_url ?? ''}
-            asOfYear={currentRound.revealed_as_of_year ?? 0}
-            unit={currentRound.question_unit}
-            answers={state.answers.map((answer) => ({
-              playerId: answer.player_id,
-              nickname: nicknameById.get(answer.player_id) ?? '???',
-              value: answer.value,
-              submittedAt: answer.submitted_at,
-            }))}
-            pauseSecondsRemaining={room.status === 'playing' ? advancer.remainingSeconds : null}
-          />
-          {room.status === 'abandoned' && <Note tone="erro">Sala encerrada por inatividade.</Note>}
-          {room.status === 'finished' && (
-            <Note>
-              Partida encerrada.
-              {room.winner_player_id
-                ? ` Vencedor: ${nicknameById.get(room.winner_player_id) ?? '???'}`
-                : ''}
-            </Note>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={phaseKey}
+          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+          transition={FADE_TRANSITION}
+          className="flex flex-col gap-10"
+        >
+          {room.status === 'lobby' && (
+            <Lobby
+              code={room.code}
+              players={players}
+              isHost={state.isHost}
+              onStart={handleStart}
+              starting={starting}
+            />
           )}
-        </>
-      )}
+
+          {room.status !== 'lobby' && currentRound && currentRound.status === 'open' && (
+            <RoundOpen
+              roundId={currentRound.id}
+              prompt={currentRound.question_prompt}
+              unit={currentRound.question_unit}
+              endsAt={currentRound.ends_at}
+              answerSeconds={room.answer_seconds}
+              answersCount={currentRound.answers_count}
+              playersCount={activePlayersCount}
+            />
+          )}
+
+          {room.status !== 'lobby' && currentRound && currentRound.status === 'closed' && (
+            <>
+              <RoundReveal
+                roundId={currentRound.id}
+                revealedAnswer={currentRound.revealed_answer ?? 0}
+                sourceName={currentRound.revealed_source_name ?? ''}
+                sourceUrl={currentRound.revealed_source_url ?? ''}
+                asOfYear={currentRound.revealed_as_of_year ?? 0}
+                unit={currentRound.question_unit}
+                answers={state.answers.map((answer) => ({
+                  playerId: answer.player_id,
+                  nickname: nicknameById.get(answer.player_id) ?? '???',
+                  value: answer.value,
+                  submittedAt: answer.submitted_at,
+                }))}
+                highlightPlayerId={playerId}
+                pauseSecondsRemaining={room.status === 'playing' ? advancer.remainingSeconds : null}
+              />
+              {room.status === 'abandoned' && (
+                <Note tone="erro">Sala encerrada por inatividade.</Note>
+              )}
+              {room.status === 'finished' && (
+                <Note>
+                  Partida encerrada.
+                  {room.winner_player_id
+                    ? ` Vencedor: ${nicknameById.get(room.winner_player_id) ?? '???'}`
+                    : ''}
+                </Note>
+              )}
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {feedback && <Note tone="erro">{feedback}</Note>}
 
-      <Scoreboard players={players} highlightPlayerId={playerId} winnerPlayerId={room.winner_player_id} />
+      <Scoreboard
+        players={players}
+        highlightPlayerId={playerId}
+        winnerPlayerId={room.winner_player_id}
+        isFinal={room.status === 'finished'}
+      />
     </div>
   )
 }
