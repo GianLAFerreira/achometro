@@ -47,7 +47,7 @@ export function Lobby({ code, players, isHost, onStart, starting }: LobbyProps) 
       {players.length <= 1 && <Note>Ninguém aqui ainda. Passe o código {code}.</Note>}
 
       {isHost ? (
-        <Button onClick={onStart} disabled={starting || players.length === 0}>
+        <Button onClick={onStart} disabled={starting || players.length < 2}>
           Iniciar rodada
         </Button>
       ) : (
