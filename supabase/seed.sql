@@ -1,12 +1,20 @@
 -- Lote 1 — amostra de 10 perguntas para playtest com pessoas reais, antes de completar
 -- o banco (~150). Validadas pelo agente curador-perguntas contra os 4 critérios de aceite.
+--
+-- Taxonomia FIXA de `theme` (ver src/lib/topics.ts, fonte única do lado do cliente):
+-- 'futebol', 'geografia', 'historia', 'brasil', 'corpo-humano', 'cultura', 'animais'.
+-- Qualquer pergunta nova (manual ou via curador-perguntas) usa um destes valores —
+-- não inventar tema novo sem atualizar os dois lados (aqui e src/lib/topics.ts).
+-- 'Conhecimentos Gerais' não é um valor de tema: é `rooms.themes = '{}'` no seletor
+-- da sala, que já significa "qualquer tema" pro start_round. 'historia' ainda não
+-- tem nenhuma pergunta neste lote — filtra corretamente, só devolve pool vazio.
 
 insert into public.questions
   (prompt, answer, unit, theme, difficulty, source_name, source_url, as_of_year)
 values
   (
     'Quantos gols saíram na Copa do Mundo de 2026, contando todas as fases do torneio?',
-    308, 'gols', 'esportes', 3,
+    308, 'gols', 'futebol', 3,
     'Wikipedia (agregando dados da FIFA) e Yahoo Sports',
     'https://en.wikipedia.org/wiki/2026_FIFA_World_Cup',
     2026

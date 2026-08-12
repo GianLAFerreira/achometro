@@ -92,6 +92,11 @@ por estado (ex.: o anel de progresso do cronômetro) não contam como esse trata
 textura, bisel ou brilho, só um traço colorido por token; a proibição é sobre ornamento
 skeuomórfico, não sobre qualquer elemento gráfico fora do mostrador.
 
+Estado "selecionado" em qualquer controle novo (ex.: `TopicSelect.tsx`, seletor de tópicos da sala)
+reaproveita as mesmas cores das variantes de `Button.tsx` (`bg-latao text-tinta` selecionado,
+`bg-esmalte-2 text-mostrador` não-selecionado) em vez de inventar uma terceira paleta de "estado
+ativo" — mesmo princípio de fonte única que rege os presets de movimento e os tokens de cor.
+
 ## Voz da interface
 
 Vocabulário de instrumento, claro antes de esperto. Sem "Ops!", sem pedido de desculpa, sem
