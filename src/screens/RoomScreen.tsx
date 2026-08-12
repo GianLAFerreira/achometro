@@ -166,6 +166,8 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
               isHost={state.isHost}
               onStart={handleStart}
               starting={starting}
+              targetScore={room.target_score}
+              roundsTotal={room.rounds_total}
             />
           )}
 

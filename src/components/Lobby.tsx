@@ -14,9 +14,19 @@ interface LobbyProps {
   isHost: boolean
   onStart: () => void
   starting: boolean
+  targetScore: number
+  roundsTotal: number
 }
 
-export function Lobby({ code, players, isHost, onStart, starting }: LobbyProps) {
+export function Lobby({
+  code,
+  players,
+  isHost,
+  onStart,
+  starting,
+  targetScore,
+  roundsTotal,
+}: LobbyProps) {
   const reduceMotion = useReducedMotion()
 
   return (
@@ -25,6 +35,15 @@ export function Lobby({ code, players, isHost, onStart, starting }: LobbyProps) 
         <p className="font-body text-sm text-mostrador/60">Código da sala</p>
         <p className="font-num text-3xl text-latao">{code}</p>
       </div>
+
+      {/* Configuração escolhida na Home, invisível depois de criada a
+          sala até esta linha — mesma fonte de dados que já chega em
+          `room`, sem RPC nova. `/60`, não o `/70` do Note neutro: aqui é
+          rótulo de campo (mesmo par de "Código da sala" acima), não
+          conteúdo informativo avulso — escolha deliberada, não deriva. */}
+      <p className="font-body text-sm text-mostrador/60">
+        Primeiro a {targetScore} pontos ou {roundsTotal} rodadas
+      </p>
 
       <ul className="flex flex-col gap-1">
         <AnimatePresence initial={false}>
