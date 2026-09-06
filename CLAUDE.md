@@ -3,7 +3,7 @@
 Jogo de palpite numérico multiplayer, web, anônimo. Sala com código, host configura tema e
 rodadas, cada jogador palpita um número, quem chega mais perto pontua.
 
-Plano completo: `C:\Users\gianf\.claude\plans\queriar-um-aplicativo-iremos-nifty-aho.md`
+Documentação da estrutura do projeto (pastas, banco, fluxo de jogo): `docs/`.
 
 ## Stack e por quê (não sugerir trocar sem reler isto)
 
@@ -16,7 +16,7 @@ Plano completo: `C:\Users\gianf\.claude\plans\queriar-um-aplicativo-iremos-nifty
 | Banco + Realtime | Supabase (Postgres + Realtime + RLS) | Free tier cobre a escala alvo (~50 pessoas). |
 | Lógica de jogo | Funções Postgres (RPC, `SECURITY DEFINER`) | Estado autoritativo sem manter servidor ligado. |
 | Limpeza | pg_cron | TTL de salas/respostas (24h). |
-| Deploy | Cloudflare Pages | Estático, grátis, sem cold start. |
+| Deploy | Cloudflare Workers (assets estáticos) | Estático, grátis, sem cold start. Conectar o repo pelo "Connect to Git" da Cloudflare hoje cria um Worker com `@cloudflare/vite-plugin`, não um projeto Pages clássico — `wrangler.jsonc` é gerado automaticamente pelo build, não commitado. |
 
 ## Regras que não se quebram
 
@@ -54,20 +54,31 @@ para Node. Sempre via `npm run`, nunca instalar `supabase` global no sistema.
 ```
 npm run dev              # servidor de desenvolvimento Vite
 npm run build             # build de produção
+npm run preview            # serve o build de produção localmente
+npm run lint                # oxlint
 npm run db:start           # sobe Postgres + Realtime local no Docker (exige Docker Desktop ligado)
 npm run db:stop            # derruba os containers locais
 npm run db:reset           # reaplica migrations + seed do zero
 npm run db:status          # mostra URLs/chaves do ambiente local
-npm run test:e2e           # Playwright, multiplayer com contextos paralelos (a partir da Fase 3)
+npm run db:types           # gera src/types/database.ts a partir do schema local
 ```
+
+Testes e2e (Playwright, multiplayer com contextos paralelos) ainda não foram implementados — não
+existe `npm run test:e2e` nem a dependência no `package.json` hoje, apesar de terem sido cogitados
+para a Fase 3.
 
 ## Mapa de pastas
 
 - `supabase/migrations/` — schema e RPCs, uma migration por mudança, nunca editadas depois de
   aplicadas.
-- `supabase/seed.sql` — banco de perguntas curadas (prompt, gabarito, fonte, ano).
+- `supabase/seed.sql` — carrega o lote inicial de perguntas e, via glob, todo arquivo em `seeds/`.
+- `supabase/seeds/` — famílias/lotes de perguntas curadas por tema (prompt, gabarito, fonte, ano).
 - `src/` — cliente React. Estado de servidor via Supabase Realtime + RPC; Zustand só para estado
   de UI local (não duplicar estado do servidor).
+- `docs/` — documentação da estrutura do projeto: pastas, arquitetura, schema do banco, fluxo de
+  jogo. Detalhe de implementação; regras de produto continuam sendo este arquivo.
+- `.claude/agents/` — agentes especializados (`curador-perguntas`, `rls-auditor`, `achometro-ui`).
+- `.claude/skills/` — skills carregadas sob demanda (`achometro-design`, `achometro-perguntas`).
 
 ## Segredos
 
