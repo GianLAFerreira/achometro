@@ -37,9 +37,13 @@ Plano completo: `C:\Users\gianf\.claude\plans\queriar-um-aplicativo-iremos-nifty
    pronto traz o default de "cara de IA" embutido.
 6. **Sem LLM em runtime.** As perguntas vêm do banco curado (`supabase/seed.sql`), não de chamada
    de API durante o jogo.
-7. **Sem analytics de terceiro, sem font CDN, sem pixel de rastreio.** Fontes self-hosted via
+7. **Redação de pergunta segue a skill `achometro-perguntas`.** Forma (âncora + pergunta), o
+   critério de "divertida" e as convenções de `unit`/`theme`/`difficulty` moram lá, não na
+   memória de quem escreve. Curadoria de fonte (qual usar quando agregadores divergem) mora no
+   agent `curador-perguntas`, não na skill.
+8. **Sem analytics de terceiro, sem font CDN, sem pixel de rastreio.** Fontes self-hosted via
    `@fontsource`.
-8. **Nunca editar uma migration já aplicada.** Corrigir é criar uma migration nova — é como o
+9. **Nunca editar uma migration já aplicada.** Corrigir é criar uma migration nova — é como o
    Supabase rastreia estado.
 
 ## Comandos
