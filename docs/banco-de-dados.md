@@ -67,6 +67,16 @@ PK composta `(player_id, question_id)`, **sem FK para `rooms`/`players`/`rounds`
 precisa sobreviver à sala para o dedupe de perguntas continuar funcionando depois que ela expirar
 e for apagada pelo TTL.
 
+### `client_errors`
+
+Observabilidade, não gameplay — erro que só acontece no navegador do jogador (React quebrando,
+promise sem `.catch`), gravado por `log_client_error` pra dar pra consultar depois. Mesmo padrão
+de `questions`: RLS ligado, **zero policy, zero GRANT direto** — só a função `SECURITY DEFINER`
+escreve; leitura é só via `service_role` (painel do Supabase), nunca pelo cliente do jogo. TTL de
+30 dias via `pg_cron` (ver migration `20260908043026_observabilidade_erros_cliente.sql`). Ver
+[`observabilidade.md`](./observabilidade.md) para os outros canais de log (Postgres/API do
+Supabase, tráfego do Cloudflare Workers) que não exigiram nenhuma tabela nova.
+
 ## Funções RPC (`SECURITY DEFINER`)
 
 Todas em `supabase/migrations/*_functions.sql` (com reescritas posteriores em migrations
@@ -87,6 +97,8 @@ de outro schema).
 | `close_round(round_id)` | host, a qualquer momento; qualquer membro, só depois de `ends_at` | Calcula pontos por erro relativo (`\|palpite − gabarito\| / \|gabarito\|`; ver fórmula abaixo), incrementa `missed_streak` de quem não respondeu, revela o gabarito, e decide se a sala termina (três vias, ver abaixo). Idempotente: fechar de novo retorna a rodada já fechada em vez de pontuar duas vezes. |
 | `server_now()` | idem | Devolve `now()` do servidor — o cliente usa uma vez no boot para medir o offset entre seu relógio e o do servidor (`src/lib/clock.ts`). |
 | `is_room_member(room_id)`, `can_read_answer(round_id)` | uso interno das RLS policies | Funções auxiliares `SECURITY DEFINER` que isolam o lookup de pertencimento — necessário para evitar recursão infinita de uma policy que faria `EXISTS` na própria tabela dentro do seu `USING`. |
+| `create_rematch(old_room_id)` | membro da sala antiga, só depois de `finished` | Cria (ou devolve, se já existir) uma sala nova com a mesma configuração e o mesmo apelido, e grava o código dela em `rooms.rematch_room_code` da sala antiga — é assim que todo mundo cai na mesma sala nova ao clicar "Jogar de novo", não cada um na sua. Idempotente contra corrida (`select ... for update` na sala antiga). |
+| `log_client_error(message, stack, path, user_agent)` | qualquer sessão autenticada | Grava uma linha em `client_errors`. Nunca falha de um jeito que quebre o app — se der errado, o cliente (`lib/clientErrorLog.ts`) só desiste em silêncio. |
 
 ### Lobby sem host (`start_round`, migration `20260908034757_lobby_sem_host_apos_desistencia.sql`)
 
@@ -147,7 +159,8 @@ filtra `TRUNCATE` — limitação conhecida do Postgres, não bug daqui).
 `pg_cron` roda `delete from public.rooms where expires_at < now()` a cada 30 minutos. `players`,
 `rounds`, `answers` são apagados junto via `ON DELETE CASCADE`. `question_seen` sobrevive de
 propósito (sem FK para `rooms`), para o dedupe de perguntas continuar valendo mesmo depois que a
-sala que gerou aquele registro já foi apagada.
+sala que gerou aquele registro já foi apagada. `client_errors` tem seu próprio job (`pg_cron`,
+uma vez por dia), apagando linhas com mais de 30 dias.
 
 ## Realtime
 

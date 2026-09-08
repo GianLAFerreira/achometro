@@ -13,6 +13,8 @@ referência de *onde as coisas estão e como se encaixam*.
   refletindo o estado atual das migrations.
 - [`fluxo-de-jogo.md`](./fluxo-de-jogo.md) — o ciclo de vida de uma sala e de uma rodada, tela por
   tela.
+- [`observabilidade.md`](./observabilidade.md) — onde ver log/erro: painel do Supabase (jogo),
+  tabela `client_errors` (navegador do jogador), Cloudflare Workers Logs (site estático).
 
 Estes documentos descrevem o estado do código nas migrations e arquivos existentes no momento em
 que foram escritos (2026-09-06). Quando uma migration nova mudar uma tabela, função ou regra

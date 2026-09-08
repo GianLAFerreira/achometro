@@ -63,6 +63,36 @@ export type Database = {
           },
         ]
       }
+      client_errors: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          path: string | null
+          player_id: string | null
+          stack: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          path?: string | null
+          player_id?: string | null
+          stack?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          path?: string | null
+          player_id?: string | null
+          stack?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       players: {
         Row: {
           id: string
@@ -402,6 +432,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      log_client_error: {
+        Args: {
+          p_message: string
+          p_path?: string
+          p_stack?: string
+          p_user_agent?: string
+        }
+        Returns: undefined
       }
       peek_room: { Args: { p_room_code: string }; Returns: string }
       server_now: { Args: never; Returns: string }

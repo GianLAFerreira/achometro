@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { ensureSession } from './lib/session.ts'
+import { installGlobalErrorLogging } from './lib/clientErrorLog.ts'
+
+installGlobalErrorLogging()
 
 const rootElement = document.getElementById('root')!
 const root = createRoot(rootElement)

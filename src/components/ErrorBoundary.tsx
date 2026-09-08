@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import type { ReactNode } from 'react'
 import { Note } from './Note'
+import { logClientError } from '../lib/clientErrorLog'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -19,6 +20,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error): void {
     console.error(error)
+    void logClientError(error.message, error.stack)
   }
 
   render() {
