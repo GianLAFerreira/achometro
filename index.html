@@ -39,6 +39,29 @@
       content="Jogo de palpite numérico entre amigos. Todo mundo crava um número e o mostrador aponta quem chegou mais perto."
     />
     <meta name="twitter:image" content="https://achometro.app.br/og-image.png" />
+
+    <!-- Dados estruturados (schema.org) — ajuda o Google a entender que a página é um app/jogo,
+         não um artigo qualquer. Puro JSON descritivo, sem chamada a nenhum domínio externo — não
+         é analytics nem rastreio (regra 8 do CLAUDE.md continua valendo). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Achômetro",
+        "alternateName": "O medidor oficial do seu achismo",
+        "url": "https://achometro.app.br/",
+        "description": "Jogo de palpite numérico entre amigos. Todo mundo crava um número e o mostrador aponta quem chegou mais perto.",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Qualquer navegador web",
+        "inLanguage": "pt-BR",
+        "image": "https://achometro.app.br/og-image.png",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
