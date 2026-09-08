@@ -10,7 +10,7 @@ export async function logClientError(message: string, stack?: string): Promise<v
   try {
     await supabase.rpc('log_client_error', {
       p_message: message,
-      p_stack: stack ?? null,
+      p_stack: stack,
       p_path: window.location.pathname,
       p_user_agent: navigator.userAgent,
     })
