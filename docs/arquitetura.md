@@ -43,6 +43,13 @@ resync também dispara em reconexão de canal (`SUBSCRIBED`/`CHANNEL_ERROR`/`TIM
 `visibilitychange` e em `online` — cobrindo o celular que volta de segundo plano ou de uma queda de
 rede.
 
+**Fallback pra polling em pico.** O Realtime do Supabase tem um teto de 200 conexões simultâneas
+por projeto no free tier — irrelevante no uso normal (grupos pequenos, horários espalhados), mas
+relevante num pico raro (ex.: o app viralizar). Se o canal de UM cliente específico não conseguir
+conectar (qualquer status diferente de `SUBSCRIBED`), esse cliente cai sozinho pra refetch
+periódico (2s) até a lib de Realtime conseguir reconectar por conta própria — sem coordenação
+global entre clientes, sem contador de conexões. Ver `useRoom.ts` (constante `FALLBACK_POLL_MS`).
+
 `answers` fica deliberadamente fora da publicação do Realtime (ver
 `20260812012126_realtime_e_integridade_de_rodada.sql`) — mesmo que a avaliação de RLS do Realtime
 tivesse alguma falha, o palpite de outro jogador nunca sairia do banco com a rodada aberta.

@@ -38,6 +38,14 @@ export type RoomState =
 
 const RESYNC_DEBOUNCE_MS = 80
 
+// Rede de segurança pro teto de 200 conexões Realtime simultâneas do free
+// tier do Supabase: se ESTE cliente não conseguir conectar (pico raro,
+// ex. o app viralizando), cai pra refetch periódico em vez de travar sem
+// atualização nenhuma. 2s equilibra latência aceitável (rodada dura ~20s)
+// contra o orçamento de egress do free tier (5GB/mês) — a 1000 pessoas
+// simultâneas por ~2h de pico, dá ~2GB, dentro do orçamento mensal.
+const FALLBACK_POLL_MS = 2000
+
 /**
  * Hook mestre de uma sala. Regra de arquitetura: todo evento do Realtime é
  * tratado como INVALIDAÇÃO, nunca como payload aplicado direto no estado.
@@ -49,6 +57,7 @@ export function useRoom(roomCode: string, playerId: string | null) {
   const [roomId, setRoomId] = useState<string | null>(null)
   const [state, setState] = useState<RoomState>({ kind: 'resolving' })
   const resyncTimerRef = useRef<number | null>(null)
+  const pollIntervalRef = useRef<number | null>(null)
 
   const fetchAndSet = useCallback(
     async (id: string) => {
@@ -145,8 +154,26 @@ export function useRoom(roomCode: string, playerId: string | null) {
         // cobre a assinatura inicial, toda reconexão depois de queda de
         // rede, e serve de rede de segurança se o canal cair sem que
         // 'online'/visibilitychange disparem.
-        if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        if (status === 'SUBSCRIBED') {
+          // Conectado (ou reconectou sozinho) — desliga o polling de reserva
+          // se estava rodando.
+          if (pollIntervalRef.current) {
+            window.clearInterval(pollIntervalRef.current)
+            pollIntervalRef.current = null
+          }
           fetchAndSet(roomId)
+          return
+        }
+        // CHANNEL_ERROR | TIMED_OUT | CLOSED — a lib de Realtime não
+        // documenta qual desses status corresponde especificamente a "teto
+        // de conexões simultâneas do free tier atingido", então tratamos
+        // qualquer status que não seja SUBSCRIBED como "Realtime
+        // indisponível agora". O cliente da lib já tenta reconectar sozinho
+        // (backoff interno) — se conseguir, o SUBSCRIBED acima desliga este
+        // polling de novo.
+        fetchAndSet(roomId)
+        if (pollIntervalRef.current === null) {
+          pollIntervalRef.current = window.setInterval(() => fetchAndSet(roomId), FALLBACK_POLL_MS)
         }
       })
 
@@ -162,6 +189,7 @@ export function useRoom(roomCode: string, playerId: string | null) {
       window.removeEventListener('online', onOnline)
       supabase.removeChannel(channel)
       if (resyncTimerRef.current) window.clearTimeout(resyncTimerRef.current)
+      if (pollIntervalRef.current) window.clearInterval(pollIntervalRef.current)
     }
   }, [roomId, fetchAndSet, scheduleResync])
 
