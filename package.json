@@ -12,7 +12,8 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:status": "supabase status",
-    "db:types": "supabase gen types typescript --local > src/types/database.ts"
+    "db:types": "supabase gen types typescript --local > src/types/database.ts",
+    "db:test": "supabase test db"
   },
   "dependencies": {
     "@fontsource/bricolage-grotesque": "^5.3.0",

@@ -61,11 +61,14 @@ npm run db:stop            # derruba os containers locais
 npm run db:reset           # reaplica migrations + seed do zero
 npm run db:status          # mostra URLs/chaves do ambiente local
 npm run db:types           # gera src/types/database.ts a partir do schema local
+npm run db:test             # roda os testes pgTAP em supabase/tests/ (exige db:start ligado)
 ```
 
 Testes e2e (Playwright, multiplayer com contextos paralelos) ainda não foram implementados — não
 existe `npm run test:e2e` nem a dependência no `package.json` hoje, apesar de terem sido cogitados
-para a Fase 3.
+para a Fase 3. O que existe hoje é `db:test` — pgTAP direto no Postgres, cobrindo casos de RPC
+que já se mostraram frágeis (empate em `close_round`, geração de código de sala,
+idempotência de `create_rematch`). Ver `supabase/tests/`.
 
 ## Mapa de pastas
 
@@ -73,6 +76,7 @@ para a Fase 3.
   aplicadas.
 - `supabase/seed.sql` — carrega o lote inicial de perguntas e, via glob, todo arquivo em `seeds/`.
 - `supabase/seeds/` — famílias/lotes de perguntas curadas por tema (prompt, gabarito, fonte, ano).
+- `supabase/tests/` — testes pgTAP das funções RPC (`npm run db:test`).
 - `src/` — cliente React. Estado de servidor via Supabase Realtime + RPC; Zustand só para estado
   de UI local (não duplicar estado do servidor).
 - `docs/` — documentação da estrutura do projeto: pastas, arquitetura, schema do banco, fluxo de

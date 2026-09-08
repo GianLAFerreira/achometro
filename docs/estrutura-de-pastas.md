@@ -12,6 +12,7 @@ achometro/
 │   ├── migrations/        schema e RPCs, uma migration por mudança, nunca editada depois de aplicada
 │   ├── seed.sql            lote inicial de perguntas (misto de temas, usado no primeiro playtest)
 │   ├── seeds/               famílias/lotes de perguntas por tema, carregadas via glob por seed.sql
+│   ├── tests/                testes pgTAP das funções RPC (npm run db:test)
 │   └── config.toml         config do projeto Supabase local (Docker)
 ├── .claude/
 │   ├── agents/             agentes especializados (curador-perguntas, rls-auditor, achometro-ui)
@@ -89,6 +90,9 @@ cliente, é quem decide se a ação é válida (idempotência e checagem de temp
 - `seeds/futebol_0N.sql` — famílias/lotes de perguntas do tema `futebol`, cada uma com header
   comentado explicando fonte e descartes. Ver a skill `achometro-perguntas` e o agente
   `curador-perguntas` para o processo de escrever uma nova.
+- `tests/*.sql` — testes pgTAP (`begin`/`plan`/`finish`/`rollback`), um arquivo por função RPC
+  testada. Rodam contra o banco local (`npm run db:test`, exige `db:start` ligado); cada arquivo
+  roda dentro de uma transação que sempre dá rollback — não deixa dado nenhum pra trás.
 
 ## `.claude/`
 
