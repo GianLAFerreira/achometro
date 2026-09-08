@@ -31,6 +31,17 @@ export async function createRoom(
   return data
 }
 
+// Nunca recebe nickname do chamador — o servidor reusa o apelido que a
+// pessoa já tinha na sala antiga (players.nickname), igual documentado em
+// create_rematch. Idempotente: se outro jogador já clicou "jogar de
+// novo" primeiro, devolve a MESMA sala nova em vez de criar outra — é
+// isso que garante todo mundo cair junto, não uma sala por clique.
+export async function createRematch(oldRoomId: string): Promise<RoomRow> {
+  const { data, error } = await supabase.rpc('create_rematch', { p_old_room_id: oldRoomId })
+  if (error) throw error
+  return data
+}
+
 export async function joinRoom(roomCode: string, nickname: string): Promise<RoomRow> {
   const { data, error } = await supabase.rpc('join_room', {
     p_room_code: roomCode,

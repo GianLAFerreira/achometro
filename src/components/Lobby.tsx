@@ -3,6 +3,7 @@ import { Button } from './Button'
 import { Note } from './Note'
 import { useCountdown } from '../lib/clock'
 import { DURATION_FAST, useReducedMotion } from '../lib/motion'
+import { GENERAL_TOPIC_LABEL, TOPICS } from '../lib/topics'
 
 interface LobbyPlayer {
   id: string
@@ -17,6 +18,16 @@ interface LobbyProps {
   starting: boolean
   targetScore: number
   createdAt: string
+  themes: string[]
+}
+
+// `themes = []` é "qualquer tema" (ver lib/topics.ts) — mesmo valor que o
+// servidor usa direto em start_round, não um tema de verdade pra rotular.
+function themeLabels(themes: string[]): string {
+  if (themes.length === 0) return GENERAL_TOPIC_LABEL
+  return themes
+    .map((value) => TOPICS.find((topic) => topic.value === value)?.label ?? value)
+    .join(', ')
 }
 
 // Espelha o `interval '45 seconds'` do branch 'lobby' de start_round
@@ -32,6 +43,7 @@ export function Lobby({
   starting,
   targetScore,
   createdAt,
+  themes,
 }: LobbyProps) {
   const reduceMotion = useReducedMotion()
   const graceEndsAt = new Date(
@@ -51,6 +63,7 @@ export function Lobby({
           `room`, sem RPC nova. `/60`, não o `/70` do Note neutro: aqui é
           rótulo de campo (mesmo par de "Código da sala" acima), não
           conteúdo informativo avulso — escolha deliberada, não deriva. */}
+      <p className="font-body text-sm text-mostrador/60">Tema: {themeLabels(themes)}</p>
       <p className="font-body text-sm text-mostrador/60">
         Primeiro a {targetScore} pontos
       </p>

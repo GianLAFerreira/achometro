@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useRoom } from '../state/useRoom'
@@ -13,7 +13,7 @@ import { Podium } from '../components/Podium'
 import { Button } from '../components/Button'
 import { TextField } from '../components/TextField'
 import { Note } from '../components/Note'
-import { createRoom, startRound } from '../lib/rpc'
+import { createRematch, startRound } from '../lib/rpc'
 import { describeError } from '../lib/errors'
 import { navigate, roomPath } from '../lib/router'
 import { FADE_TRANSITION, useReducedMotion } from '../lib/motion'
@@ -71,14 +71,14 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
   const handleJoin = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
-      if (!nickname) {
+      if (!nickname.trim()) {
         setFeedback('Escolha um apelido.')
         return
       }
       setJoining(true)
       setFeedback(null)
       try {
-        await join(nickname)
+        await join(nickname.trim())
       } catch (error) {
         setFeedback(describeError(error))
       } finally {
@@ -104,29 +104,34 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
     }
   }, [state, resync])
 
-  // Sala nova com a mesma configuração (temas, tempos, pontuação-alvo) da
-  // que acabou de terminar — mesmo apelido que a pessoa já usava aqui,
-  // não useNickname() (mesma razão de `me` documentada acima). Quem
-  // clica vira host da sala nova; amigos entram pelo código novo, igual
-  // a qualquer sala criada do zero — não teleporta ninguém.
+  // Dispara create_rematch, mas NÃO navega diretamente — quem decide a
+  // navegação é o efeito abaixo, pra todo mundo (inclusive quem clicou)
+  // cair na mesma sala. Sem isso, cada clique gerava sua própria sala
+  // nova (achado em playtest — ver migration
+  // jogar_de_novo_sala_compartilhada). Servidor é idempotente: um
+  // segundo clique de outro jogador só devolve a sala que já existe.
   const handlePlayAgain = useCallback(async () => {
     if (state.kind !== 'ready' || !state.me) return
     setPlayingAgain(true)
     setFeedback(null)
     try {
-      const newRoom = await createRoom(state.me.nickname, {
-        themes: state.room.themes,
-        answerSeconds: state.room.answer_seconds,
-        pauseSeconds: state.room.pause_seconds,
-        targetScore: state.room.target_score,
-      })
-      navigate(roomPath(newRoom.code))
+      await createRematch(state.room.id)
     } catch (error) {
       setFeedback(describeError(error))
     } finally {
       setPlayingAgain(false)
     }
   }, [state])
+
+  // Segue rooms.rematch_room_code assim que ele aparece via Realtime —
+  // vale pra quem clicou "jogar de novo" E pra quem só esperou. navigate()
+  // já é no-op se o caminho não mudou, então não corre risco de disparar
+  // duas vezes.
+  const rematchRoomCode =
+    state.kind === 'ready' && state.me ? state.room.rematch_room_code : null
+  useEffect(() => {
+    if (rematchRoomCode) navigate(roomPath(rematchRoomCode))
+  }, [rematchRoomCode])
 
   if (state.kind === 'resolving') {
     return <Note>Aferindo.</Note>
@@ -203,6 +208,7 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
               starting={starting}
               targetScore={room.target_score}
               createdAt={room.created_at}
+              themes={room.themes}
             />
           )}
 

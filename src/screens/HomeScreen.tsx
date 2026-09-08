@@ -35,7 +35,7 @@ export function HomeScreen() {
   const handleContinue = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
-      if (!nickname) {
+      if (!nickname.trim()) {
         setFeedback('Escolha um apelido.')
         return
       }

@@ -63,7 +63,12 @@ export function RoomConfigForm({ nickname, onCreated, onBack }: RoomConfigFormPr
     setCreating(true)
     setFeedback(null)
     try {
-      const room = await createRoom(nickname, { themes, targetScore, answerSeconds, pauseSeconds })
+      const room = await createRoom(nickname.trim(), {
+        themes,
+        targetScore,
+        answerSeconds,
+        pauseSeconds,
+      })
       onCreated(room)
     } catch (error) {
       setFeedback(describeError(error))

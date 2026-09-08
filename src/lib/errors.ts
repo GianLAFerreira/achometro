@@ -22,6 +22,7 @@ const MESSAGES: Record<string, string> = {
   pause_in_progress: 'Aguarde a pausa entre rodadas terminar.',
   room_closed: 'Essa partida já terminou.',
   not_enough_players: 'Precisa de pelo menos 2 pessoas pra começar.',
+  room_not_finished: 'Essa partida ainda não terminou.',
 }
 
 const FALLBACK = 'Não deu certo agora. Tenta de novo.'

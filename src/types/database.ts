@@ -178,6 +178,7 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
+          rematch_room_code: string | null
           status: string
           target_score: number
           themes: string[]
@@ -191,6 +192,7 @@ export type Database = {
           host_player_id: string
           id?: string
           pause_seconds?: number
+          rematch_room_code?: string | null
           status?: string
           target_score?: number
           themes?: string[]
@@ -204,6 +206,7 @@ export type Database = {
           host_player_id?: string
           id?: string
           pause_seconds?: number
+          rematch_room_code?: string | null
           status?: string
           target_score?: number
           themes?: string[]
@@ -324,6 +327,29 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      create_rematch: {
+        Args: { p_old_room_id: string }
+        Returns: {
+          answer_seconds: number
+          code: string
+          created_at: string
+          expires_at: string
+          host_player_id: string
+          id: string
+          pause_seconds: number
+          rematch_room_code: string | null
+          status: string
+          target_score: number
+          themes: string[]
+          winner_player_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rooms"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_room: {
         Args: {
           p_answer_seconds?: number
@@ -340,6 +366,7 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
+          rematch_room_code: string | null
           status: string
           target_score: number
           themes: string[]
@@ -363,6 +390,7 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
+          rematch_room_code: string | null
           status: string
           target_score: number
           themes: string[]

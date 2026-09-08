@@ -18,11 +18,17 @@ function readStoredNickname(): string {
 export function useNickname() {
   const [nickname, setNicknameState] = useState<string>(readStoredNickname)
 
+  // NUNCA usa .trim() aqui — isso rodaria a cada tecla digitada (onChange),
+  // e um espaço no fim seria removido antes da pessoa conseguir digitar a
+  // próxima palavra, tornando impossível digitar um apelido de duas
+  // palavras (bug real, achado em playtest). Espaço (inclusive nas pontas)
+  // só é limpo na hora de USAR o apelido (createRoom/joinRoom), nunca
+  // enquanto ainda está sendo digitado.
   const setNickname = useCallback((value: string) => {
-    const trimmed = value.trim().slice(0, MAX_LENGTH)
-    setNicknameState(trimmed)
+    const truncated = value.slice(0, MAX_LENGTH)
+    setNicknameState(truncated)
     try {
-      window.localStorage.setItem(STORAGE_KEY, trimmed)
+      window.localStorage.setItem(STORAGE_KEY, truncated)
     } catch {
       // localStorage pode falhar (modo privado, quota cheia) — o apelido
       // só deixa de persistir entre sessões, o jogo continua funcionando.
