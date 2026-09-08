@@ -23,6 +23,7 @@ const MESSAGES: Record<string, string> = {
   room_closed: 'Essa partida já terminou.',
   not_enough_players: 'Precisa de pelo menos 2 pessoas pra começar.',
   room_not_finished: 'Essa partida ainda não terminou.',
+  rate_limited: 'Muita coisa em pouco tempo. Espere um pouco e tenta de novo.',
 }
 
 const FALLBACK = 'Não deu certo agora. Tenta de novo.'
