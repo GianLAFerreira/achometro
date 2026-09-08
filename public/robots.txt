@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /sala/
+
+Sitemap: https://achometro.app.br/sitemap.xml
