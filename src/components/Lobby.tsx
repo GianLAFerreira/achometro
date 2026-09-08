@@ -15,7 +15,6 @@ interface LobbyProps {
   onStart: () => void
   starting: boolean
   targetScore: number
-  roundsTotal: number
 }
 
 export function Lobby({
@@ -25,7 +24,6 @@ export function Lobby({
   onStart,
   starting,
   targetScore,
-  roundsTotal,
 }: LobbyProps) {
   const reduceMotion = useReducedMotion()
 
@@ -42,7 +40,7 @@ export function Lobby({
           rótulo de campo (mesmo par de "Código da sala" acima), não
           conteúdo informativo avulso — escolha deliberada, não deriva. */}
       <p className="font-body text-sm text-mostrador/60">
-        Primeiro a {targetScore} pontos ou {roundsTotal} rodadas
+        Primeiro a {targetScore} pontos
       </p>
 
       <ul className="flex flex-col gap-1">

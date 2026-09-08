@@ -13,7 +13,6 @@ const MESSAGES: Record<string, string> = {
   could_not_allocate_room_code: 'Não consegui gerar um código de sala. Tenta de novo.',
   not_host: 'Só o anfitrião faz isso.',
   round_already_open: 'Já tem rodada em andamento.',
-  rounds_complete: 'A partida já acabou.',
   no_questions_available: 'Sem pergunta disponível para esta sala.',
   round_not_found: 'Rodada não encontrada.',
   round_closed: 'Rodada já fechada.',

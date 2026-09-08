@@ -32,7 +32,7 @@ já dizem o papel de cada uma:
 | `Button.tsx` / `buttonStyles.ts` | Botão e as variantes de estilo compartilhadas por ele e por `TopicSelect`. |
 | `TextField.tsx` / `NumberField.tsx` | Campos de formulário (apelido, código de sala, palpite). |
 | `TopicSelect.tsx` | Seletor de múltipla escolha de temas na configuração de sala. |
-| `RoomConfigForm.tsx` | Formulário do host: temas, rodadas, tempo de resposta, pausa, pontuação-alvo → chama `createRoom`. |
+| `RoomConfigForm.tsx` | Formulário do host: temas, tempo de resposta, pausa, pontuação-alvo → chama `createRoom`. Sem limite de rodadas. |
 | `Lobby.tsx` | Tela de espera antes da 1ª rodada — lista de jogadores, botão de início (host). |
 | `RoundOpen.tsx` | Rodada aberta: pergunta, campo de palpite, cronômetro. |
 | `Countdown.tsx` | Anel de cronômetro usado dentro de `RoundOpen`. |

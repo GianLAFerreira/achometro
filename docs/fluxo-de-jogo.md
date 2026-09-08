@@ -12,8 +12,9 @@ aqui) e o cliente receberia zero eventos, sem erro nenhum.
 
 ## 2. `HomeScreen` — criar ou entrar
 
-- **Criar sala**: `RoomConfigForm` (temas via `TopicSelect`, número de rodadas, tempo de resposta,
-  pausa entre rodadas, pontuação-alvo) → `createRoom()` → navega para `/sala/<código>` como host.
+- **Criar sala**: `RoomConfigForm` (temas via `TopicSelect`, tempo de resposta, pausa entre
+  rodadas, pontuação-alvo) → `createRoom()` → navega para `/sala/<código>` como host. Não há
+  limite de rodadas — a partida só termina ao atingir a pontuação-alvo (ou por inatividade).
 - **Entrar com código**: o campo aceita o código; a validação de "esse código existe?" acontece ao
   digitar o apelido na tela da sala, não aqui (`peek_room` existe para checar sem efeito colateral,
   mas o caminho de entrada de fato passa por `join_room`, que já é o efeito colateral).
@@ -60,7 +61,7 @@ começar.
 ### Podium
 
 Fim de partida, via uma das quatro condições de `close_round` (ver
-[`banco-de-dados.md`](./banco-de-dados.md#as-quatro-vias-de-fim-de-partida-close_round-em-ordem-de-checagem)).
+[`banco-de-dados.md`](./banco-de-dados.md#as-três-vias-de-fim-de-partida-close_round-em-ordem-de-checagem)).
 Pódio animado com o placar final.
 
 ## Sincronização de tempo

@@ -31,9 +31,11 @@ function inRange(value: number | null, range: { min: number; max: number }): val
   return value !== null && value >= range.min && value <= range.max
 }
 
-// create_room já aceita esses parâmetros desde a Fase 1 (rounds_total,
-// answer_seconds) e ganhou pause_seconds/target_score nesta mudança —
-// esta tela é só a primeira vez que o cliente de fato os expõe.
+// create_room já aceita answer_seconds desde a Fase 1 e ganhou
+// pause_seconds/target_score nesta mudança — esta tela é só a primeira vez
+// que o cliente de fato os expõe. Sem controle de "número de rodadas": a
+// partida agora só termina pela pontuação-alvo (ou inatividade), não por
+// contagem de rodadas.
 export function RoomConfigForm({ nickname, onCreated, onBack }: RoomConfigFormProps) {
   const [themes, setThemes] = useState<string[]>([])
   const [targetScoreRaw, setTargetScoreRaw] = useState('5')

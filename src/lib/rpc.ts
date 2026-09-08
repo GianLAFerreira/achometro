@@ -11,7 +11,6 @@ type AnswerRow = Database['public']['Tables']['answers']['Row']
 
 export interface CreateRoomOptions {
   themes?: string[]
-  roundsTotal?: number
   answerSeconds?: number
   pauseSeconds?: number
   targetScore?: number
@@ -24,7 +23,6 @@ export async function createRoom(
   const { data, error } = await supabase.rpc('create_room', {
     p_nickname: nickname,
     p_themes: options.themes ?? [],
-    p_rounds_total: options.roundsTotal ?? 10,
     p_answer_seconds: options.answerSeconds ?? 20,
     p_pause_seconds: options.pauseSeconds ?? 10,
     p_target_score: options.targetScore ?? 5,

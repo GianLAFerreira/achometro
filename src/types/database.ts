@@ -178,7 +178,6 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
-          rounds_total: number
           status: string
           target_score: number
           themes: string[]
@@ -192,7 +191,6 @@ export type Database = {
           host_player_id: string
           id?: string
           pause_seconds?: number
-          rounds_total?: number
           status?: string
           target_score?: number
           themes?: string[]
@@ -206,7 +204,6 @@ export type Database = {
           host_player_id?: string
           id?: string
           pause_seconds?: number
-          rounds_total?: number
           status?: string
           target_score?: number
           themes?: string[]
@@ -332,7 +329,6 @@ export type Database = {
           p_answer_seconds?: number
           p_nickname: string
           p_pause_seconds?: number
-          p_rounds_total?: number
           p_target_score?: number
           p_themes?: string[]
         }
@@ -344,7 +340,6 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
-          rounds_total: number
           status: string
           target_score: number
           themes: string[]
@@ -368,7 +363,6 @@ export type Database = {
           host_player_id: string
           id: string
           pause_seconds: number
-          rounds_total: number
           status: string
           target_score: number
           themes: string[]

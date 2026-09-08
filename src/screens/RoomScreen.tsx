@@ -15,6 +15,7 @@ import { TextField } from '../components/TextField'
 import { Note } from '../components/Note'
 import { startRound } from '../lib/rpc'
 import { describeError } from '../lib/errors'
+import { navigate } from '../lib/router'
 import { FADE_TRANSITION, useReducedMotion } from '../lib/motion'
 
 interface RoomScreenProps {
@@ -168,7 +169,6 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
               onStart={handleStart}
               starting={starting}
               targetScore={room.target_score}
-              roundsTotal={room.rounds_total}
             />
           )}
 
@@ -221,7 +221,12 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
       {feedback && <Note tone="erro">{feedback}</Note>}
 
       {room.status === 'finished' && (
-        <Podium players={players} highlightPlayerId={playerId} />
+        <>
+          <Podium players={players} highlightPlayerId={playerId} />
+          <Button variant="secundario" onClick={() => navigate('/')}>
+            Voltar ao início
+          </Button>
+        </>
       )}
 
       <Scoreboard

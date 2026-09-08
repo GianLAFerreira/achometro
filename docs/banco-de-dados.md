@@ -33,10 +33,9 @@ ler o gabarito antes da revelação.
 | `code` | text | único, 6 caracteres, alfabeto sem `O`/`0`/`I`/`1` (evita confusão ao ditar em voz alta) |
 | `host_player_id` | uuid | FK composta para `players (room_id, id)`, deferrable — permite inserir sala e host-jogador na mesma transação |
 | `themes` | text[] | `{}` = qualquer tema (todo o pool de `approved`); não é um valor de tema, é ausência de filtro |
-| `rounds_total` | smallint | 1–50, default 10 |
 | `answer_seconds` | smallint | 5–300, default 20 |
 | `pause_seconds` | smallint | 3–60, default 10 — pausa de revelação entre rodadas |
-| `target_score` | smallint | 1–100, default 5 — pontuação que encerra a partida antes de `rounds_total`, se atingida antes |
+| `target_score` | smallint | 1–100, default 5 — única pontuação que encerra a partida por placar; não há mais limite de rodadas (`rounds_total` foi removida) |
 | `status` | text | `lobby` \| `playing` \| `finished` \| `abandoned` |
 | `winner_player_id` | uuid | preenchido por `close_round` nas vias de "sobrevivente único" e "pontuação-alvo"; sem FK (só informativo pra UI) |
 | `expires_at` | timestamptz | `created_at + 24h`, o que o TTL usa para apagar |
@@ -80,12 +79,12 @@ de outro schema).
 
 | Função | Quem pode chamar | O que faz |
 |---|---|---|
-| `create_room(nickname, themes, rounds_total, answer_seconds, pause_seconds, target_score)` | qualquer sessão autenticada | Cria a sala com um código de 6 letras único (até 20 tentativas) e insere o próprio chamador como primeiro jogador (host). |
+| `create_room(nickname, themes, answer_seconds, pause_seconds, target_score)` | qualquer sessão autenticada | Cria a sala com um código de 6 letras único (até 20 tentativas) e insere o próprio chamador como primeiro jogador (host). |
 | `join_room(room_code, nickname)` | idem | Idempotente: entrar de novo na mesma sala só atualiza apelido e `last_seen_at`, não duplica a linha (`on conflict do update`). Recusa sala `finished`. |
 | `peek_room(room_code)` | idem | Só o veredito (`ok`/`not_found`/`finished`/`abandoned`/`empty`), nunca dados da sala — permite checar um código antes de pedir o apelido, sem o efeito colateral de `join_room` (que já coloca o chamador dentro da sala). |
 | `start_round(room_id)` | host, para sair do lobby; qualquer membro, para avançar entre rodadas depois da pausa | Escolhe uma pergunta `approved` do(s) tema(s) da sala que ninguém na sala ainda viu (`question_seen`); se o pool esgotou para esta sala, cai para a pergunta vista por *menos* gente da sala em vez de travar a partida. Recusa sala `finished`/`abandoned`, recusa avançar antes do fim de `pause_seconds`. |
 | `submit_answer(round_id, value)` | membro da sala da rodada | Grava o palpite. A PK composta de `answers` rejeita naturalmente uma segunda tentativa. Zera o próprio `missed_streak` do jogador ao responder. |
-| `close_round(round_id)` | host, a qualquer momento; qualquer membro, só depois de `ends_at` | Calcula pontos por erro relativo (`\|palpite − gabarito\| / \|gabarito\|`; ver fórmula abaixo), incrementa `missed_streak` de quem não respondeu, revela o gabarito, e decide se a sala termina (quatro vias, ver abaixo). Idempotente: fechar de novo retorna a rodada já fechada em vez de pontuar duas vezes. |
+| `close_round(round_id)` | host, a qualquer momento; qualquer membro, só depois de `ends_at` | Calcula pontos por erro relativo (`\|palpite − gabarito\| / \|gabarito\|`; ver fórmula abaixo), incrementa `missed_streak` de quem não respondeu, revela o gabarito, e decide se a sala termina (três vias, ver abaixo). Idempotente: fechar de novo retorna a rodada já fechada em vez de pontuar duas vezes. |
 | `server_now()` | idem | Devolve `now()` do servidor — o cliente usa uma vez no boot para medir o offset entre seu relógio e o do servidor (`src/lib/clock.ts`). |
 | `is_room_member(room_id)`, `can_read_answer(round_id)` | uso interno das RLS policies | Funções auxiliares `SECURITY DEFINER` que isolam o lookup de pertencimento — necessário para evitar recursão infinita de uma policy que faria `EXISTS` na própria tabela dentro do seu `USING`. |
 
@@ -99,15 +98,18 @@ decisão de produto aceita conscientemente: em gabaritos grandes (frota de veíc
 cidade) ninguém crava nunca; o bônus de 2 pontos só é alcançável de fato em perguntas de número
 pequeno.
 
-### As quatro vias de fim de partida (`close_round`, em ordem de checagem)
+### As três vias de fim de partida (`close_round`, em ordem de checagem)
 
 1. **Zero jogadores ativos** (todos com `missed_streak >= 2`) → sala `abandoned`.
 2. **Sobrou exatamente 1 jogador ativo**, e a sala tinha mais de 1 → sala `finished`,
    `winner_player_id` = o sobrevivente.
 3. **Um único líder estrito atingiu `target_score`** → sala `finished`, `winner_player_id` = o
    líder. Empate no topo *não* dispara esta via de propósito — a partida segue até desempatar.
-4. **Última rodada** (`index + 1 >= rounds_total`) → sala `finished`, sem vencedor definido aqui
-   (o cliente decide como exibir empate no placar final).
+
+Não há mais uma via de "última rodada" — a migration `20260908023154_remove_rounds_total.sql`
+removeu o limite de rodadas (`rooms.rounds_total`) de vez. Uma sala só termina por inatividade ou
+por atingir `target_score`; se nenhuma das três vias disparar, ela segue para a próxima rodada
+indefinidamente.
 
 ## RLS — nega por padrão, abre só o necessário
 
