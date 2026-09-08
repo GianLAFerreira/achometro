@@ -6,6 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0F3B3A" />
     <title>Achômetro — o medidor oficial do seu achismo</title>
+    <meta
+      name="description"
+      content="Jogo de palpite numérico entre amigos. Todo mundo crava um número e o mostrador aponta quem chegou mais perto."
+    />
+
+    <!-- Link preview (WhatsApp, Telegram, iMessage). URL absoluta e hardcoded de propósito: o
+         mesmo dist/index.html estático é servido em QUALQUER rota e nenhum crawler de preview
+         executa JS, então não há de onde ler a origem em tempo de request.
+         ATUALIZAR AQUI SE O DOMÍNIO MUDAR.
+         Ao trocar a arte, trocar também o NOME do arquivo (ex.: og-image-2.png) — o WhatsApp
+         cacheia preview por URL, então sobrescrever o mesmo arquivo não invalida o cache alheio. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Achômetro" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Achômetro — o medidor oficial do seu achismo" />
+    <meta
+      property="og:description"
+      content="Jogo de palpite numérico entre amigos. Todo mundo crava um número e o mostrador aponta quem chegou mais perto."
+    />
+    <meta property="og:url" content="https://achometro.gianlol201.workers.dev/" />
+    <meta property="og:image" content="https://achometro.gianlol201.workers.dev/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Achômetro — mostrador com o ponteiro apontando um palpite" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Achômetro — o medidor oficial do seu achismo" />
+    <meta
+      name="twitter:description"
+      content="Jogo de palpite numérico entre amigos. Todo mundo crava um número e o mostrador aponta quem chegou mais perto."
+    />
+    <meta name="twitter:image" content="https://achometro.gianlol201.workers.dev/og-image.png" />
   </head>
   <body>
     <div id="root"></div>
