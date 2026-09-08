@@ -13,9 +13,9 @@ import { Podium } from '../components/Podium'
 import { Button } from '../components/Button'
 import { TextField } from '../components/TextField'
 import { Note } from '../components/Note'
-import { startRound } from '../lib/rpc'
+import { createRoom, startRound } from '../lib/rpc'
 import { describeError } from '../lib/errors'
-import { navigate } from '../lib/router'
+import { navigate, roomPath } from '../lib/router'
 import { FADE_TRANSITION, useReducedMotion } from '../lib/motion'
 
 interface RoomScreenProps {
@@ -32,6 +32,7 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
   const { nickname, setNickname } = useNickname()
   const [joining, setJoining] = useState(false)
   const [starting, setStarting] = useState(false)
+  const [playingAgain, setPlayingAgain] = useState(false)
   const [feedback, setFeedback] = useState<string | null>(null)
   const reduceMotion = useReducedMotion()
 
@@ -103,6 +104,30 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
     }
   }, [state, resync])
 
+  // Sala nova com a mesma configuração (temas, tempos, pontuação-alvo) da
+  // que acabou de terminar — mesmo apelido que a pessoa já usava aqui,
+  // não useNickname() (mesma razão de `me` documentada acima). Quem
+  // clica vira host da sala nova; amigos entram pelo código novo, igual
+  // a qualquer sala criada do zero — não teleporta ninguém.
+  const handlePlayAgain = useCallback(async () => {
+    if (state.kind !== 'ready' || !state.me) return
+    setPlayingAgain(true)
+    setFeedback(null)
+    try {
+      const newRoom = await createRoom(state.me.nickname, {
+        themes: state.room.themes,
+        answerSeconds: state.room.answer_seconds,
+        pauseSeconds: state.room.pause_seconds,
+        targetScore: state.room.target_score,
+      })
+      navigate(roomPath(newRoom.code))
+    } catch (error) {
+      setFeedback(describeError(error))
+    } finally {
+      setPlayingAgain(false)
+    }
+  }, [state])
+
   if (state.kind === 'resolving') {
     return <Note>Aferindo.</Note>
   }
@@ -139,6 +164,14 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
   const phaseKey =
     room.status === 'lobby' ? 'lobby' : currentRound ? `round-${currentRound.status}` : 'empty'
 
+  // Se alguém já bateu a pontuação-alvo mas a sala continua 'playing', só
+  // pode ser empate entre líderes — close_round (ver migration
+  // remove_rounds_total) só encerra a partida quando existe um único líder
+  // com score >= target_score. Deriva do mesmo estado já autoritativo
+  // (score, target_score), não decide nada nova no cliente.
+  const tiebreakActive =
+    room.status === 'playing' && players.some((player) => player.score >= room.target_score)
+
   return (
     <div className="flex flex-col gap-10">
       {/* Identidade do jogador, sempre visível — fonte é `me.nickname`
@@ -169,6 +202,7 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
               onStart={handleStart}
               starting={starting}
               targetScore={room.target_score}
+              createdAt={room.created_at}
             />
           )}
 
@@ -220,9 +254,16 @@ export function RoomScreen({ code, playerId }: RoomScreenProps) {
 
       {feedback && <Note tone="erro">{feedback}</Note>}
 
+      {tiebreakActive && <Note>Empate na pontuação-alvo — a próxima rodada decide quem vence.</Note>}
+
       {room.status === 'finished' && (
         <>
           <Podium players={players} highlightPlayerId={playerId} />
+          {me && (
+            <Button onClick={handlePlayAgain} disabled={playingAgain}>
+              Jogar de novo
+            </Button>
+          )}
           <Button variant="secundario" onClick={() => navigate('/')}>
             Voltar ao início
           </Button>

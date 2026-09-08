@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { Button } from './Button'
 import { Note } from './Note'
+import { useCountdown } from '../lib/clock'
 import { DURATION_FAST, useReducedMotion } from '../lib/motion'
 
 interface LobbyPlayer {
@@ -15,7 +16,13 @@ interface LobbyProps {
   onStart: () => void
   starting: boolean
   targetScore: number
+  createdAt: string
 }
+
+// Espelha o `interval '45 seconds'` do branch 'lobby' de start_round
+// (migration lobby_sem_host_apos_desistencia) — só decide QUANDO MOSTRAR
+// o botão de fallback; quem autoriza de fato é o servidor.
+const HOST_GRACE_SECONDS = 45
 
 export function Lobby({
   code,
@@ -24,8 +31,13 @@ export function Lobby({
   onStart,
   starting,
   targetScore,
+  createdAt,
 }: LobbyProps) {
   const reduceMotion = useReducedMotion()
+  const graceEndsAt = new Date(
+    new Date(createdAt).getTime() + HOST_GRACE_SECONDS * 1000,
+  ).toISOString()
+  const graceRemaining = useCountdown(graceEndsAt)
 
   return (
     <section className="flex flex-col gap-6">
@@ -67,8 +79,16 @@ export function Lobby({
         <Button onClick={onStart} disabled={starting || players.length < 2}>
           Iniciar rodada
         </Button>
+      ) : graceRemaining > 0 ? (
+        <Note>Aguardando o anfitrião. Você pode assumir em {graceRemaining}s.</Note>
       ) : (
-        <Note>Aguardando o anfitrião.</Note>
+        <Button
+          variant="secundario"
+          onClick={onStart}
+          disabled={starting || players.length < 2}
+        >
+          Assumir e iniciar
+        </Button>
       )}
     </section>
   )

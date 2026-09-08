@@ -82,11 +82,20 @@ de outro schema).
 | `create_room(nickname, themes, answer_seconds, pause_seconds, target_score)` | qualquer sessão autenticada | Cria a sala com um código de 6 letras único (até 20 tentativas) e insere o próprio chamador como primeiro jogador (host). |
 | `join_room(room_code, nickname)` | idem | Idempotente: entrar de novo na mesma sala só atualiza apelido e `last_seen_at`, não duplica a linha (`on conflict do update`). Recusa sala `finished`. |
 | `peek_room(room_code)` | idem | Só o veredito (`ok`/`not_found`/`finished`/`abandoned`/`empty`), nunca dados da sala — permite checar um código antes de pedir o apelido, sem o efeito colateral de `join_room` (que já coloca o chamador dentro da sala). |
-| `start_round(room_id)` | host, para sair do lobby; qualquer membro, para avançar entre rodadas depois da pausa | Escolhe uma pergunta `approved` do(s) tema(s) da sala que ninguém na sala ainda viu (`question_seen`); se o pool esgotou para esta sala, cai para a pergunta vista por *menos* gente da sala em vez de travar a partida. Recusa sala `finished`/`abandoned`, recusa avançar antes do fim de `pause_seconds`. |
+| `start_round(room_id)` | host, para sair do lobby; qualquer membro da sala, depois de 45s desde `rooms.created_at`, se o host sumir sem iniciar; qualquer membro, para avançar entre rodadas depois da pausa | Escolhe uma pergunta `approved` (ou `pending`, ajuste temporário de beta — ver migration `20260908024837_beta_sorteia_pending_temporario.sql`, previsto pra ser revertido) do(s) tema(s) da sala que ninguém na sala ainda viu (`question_seen`); se o pool esgotou para esta sala, cai para a pergunta vista por *menos* gente da sala em vez de travar a partida. Recusa sala `finished`/`abandoned`, recusa avançar antes do fim de `pause_seconds`. |
 | `submit_answer(round_id, value)` | membro da sala da rodada | Grava o palpite. A PK composta de `answers` rejeita naturalmente uma segunda tentativa. Zera o próprio `missed_streak` do jogador ao responder. |
 | `close_round(round_id)` | host, a qualquer momento; qualquer membro, só depois de `ends_at` | Calcula pontos por erro relativo (`\|palpite − gabarito\| / \|gabarito\|`; ver fórmula abaixo), incrementa `missed_streak` de quem não respondeu, revela o gabarito, e decide se a sala termina (três vias, ver abaixo). Idempotente: fechar de novo retorna a rodada já fechada em vez de pontuar duas vezes. |
 | `server_now()` | idem | Devolve `now()` do servidor — o cliente usa uma vez no boot para medir o offset entre seu relógio e o do servidor (`src/lib/clock.ts`). |
 | `is_room_member(room_id)`, `can_read_answer(round_id)` | uso interno das RLS policies | Funções auxiliares `SECURITY DEFINER` que isolam o lookup de pertencimento — necessário para evitar recursão infinita de uma policy que faria `EXISTS` na própria tabela dentro do seu `USING`. |
+
+### Lobby sem host (`start_round`, migration `20260908034757_lobby_sem_host_apos_desistencia.sql`)
+
+Sair do lobby continua sendo, por padrão, ato exclusivo do host — mas se `rooms.created_at` tiver
+mais de 45s e o host ainda não tiver iniciado, **qualquer membro da sala** pode chamar
+`start_round` no lugar dele. Existe pra sala não ficar travada pra sempre (só o TTL de 24h
+resolveria) se quem criou a sala sumir antes de clicar "iniciar". O servidor é quem autoriza de
+fato (checagem de tempo contra `now()`); o cliente (`Lobby.tsx`) só decide quando *mostrar* o botão
+de fallback — nunca decide a autorização sozinho.
 
 ### Pontuação (dentro de `close_round`)
 

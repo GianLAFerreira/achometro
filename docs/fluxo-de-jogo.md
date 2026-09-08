@@ -40,6 +40,12 @@ Lista de jogadores entrando em tempo real (via Realtime em `players`). Só o hos
 iniciar — `CLAUDE.md` exige pelo menos 2 jogadores para sair do lobby, checagem feita dentro de
 `start_round` (não confiar em contagem do lado do cliente). Clicar chama `startRound(roomId)`.
 
+Se o host sumir sem iniciar, os demais veem "Aguardando o anfitrião. Você pode assumir em Ns." por
+45s (contagem contra `rooms.created_at`, relógio sincronizado com o servidor); depois disso, o
+texto vira um botão "Assumir e iniciar" que qualquer um pode clicar — o servidor, não a contagem
+do cliente, é quem de fato decide se já passou tempo suficiente (`start_round`, ver
+[`banco-de-dados.md`](./banco-de-dados.md#lobby-sem-host-start_round-migration-20260908034757_lobby_sem_host_apos_desistenciasql)).
+
 ### RoundOpen
 
 Mostra `question_prompt`/`question_unit` da rodada (copiados para `rounds` no início, não lidos de
@@ -60,9 +66,12 @@ começar.
 
 ### Podium
 
-Fim de partida, via uma das quatro condições de `close_round` (ver
+Fim de partida, via uma das três condições de `close_round` (ver
 [`banco-de-dados.md`](./banco-de-dados.md#as-três-vias-de-fim-de-partida-close_round-em-ordem-de-checagem)).
-Pódio animado com o placar final.
+Pódio animado com o placar final. Quem participou (`me` não nulo) também vê "Jogar de novo" — cria
+uma sala nova com a mesma configuração (temas, tempos, pontuação-alvo) e o mesmo apelido, e navega
+pra ela como host; não teleporta os outros jogadores, que precisam entrar pelo código novo, igual a
+qualquer sala criada do zero. "Voltar ao início" continua disponível pra quem só quer sair.
 
 ## Sincronização de tempo
 
