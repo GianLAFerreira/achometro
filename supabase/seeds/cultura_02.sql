@@ -1,0 +1,247 @@
+-- RASCUNHO NÃO VERIFICADO. Todas as ~100 linhas abaixo foram escritas de memória, sem pesquisa
+-- (sem WebSearch/WebFetch) — é geração de volume de candidatos, não curadoria. Todo `answer` é
+-- estimativa educada; toda `source_name`/`source_url` é placeholder. status = 'pending' em toda
+-- linha; start_round só sorteia status = 'approved', então nada aqui entra em partida real antes
+-- de uma sessão futura confirmar cada número com fonte real e decidir aprovar/rejeitar (mesmo
+-- processo usado em futebol_25.sql e brasil_02.sql).
+--
+-- Não repete fato-base nem molde já usado em supabase/seed.sql ou supabase/seeds/cultura_01.sql
+-- (verbetes do Aurélio, bilheteria de Avatar, certificação RIAA de Thriller, leilão do Salvator
+-- Mundi, apresentações de "O Fantasma da Ópera" na Broadway, cópias vendidas de Tetris). Também
+-- evita os "moldes fáceis" de cultura pop mais óbvios (Beatles, Star Wars, Harry Potter).
+--
+-- Famílias incluídas (cada uma cobre 1 métrica, variando a obra/artista/assunto):
+--   1.  Duração (minutos) de longas-metragens incomumente longos — cinema
+--   2.  Tiragem da primeira edição de livros hoje consagrados — literatura
+--   3.  Indicações ao Oscar recebidas sem nenhuma vitória (recordistas) — cinema/premiação
+--   4.  Semanas somadas na parada de álbuns (Billboard/UK), contando reentradas — música
+--   5.  Número de prêmios Grammy vencidos na carreira — música
+--   6.  Número de idiomas para os quais uma obra literária já foi traduzida — literatura
+--   7.  Horas para completar 100% (completionist) de jogos de mundo aberto/RPG — games
+--   8.  Número total de episódios/capítulos de séries e novelas de longuíssima duração — TV
+--   9.  Preço recorde de leilão de peça de vestuário/acessório icônico (dólares) — moda
+--   10. Preço recorde de item de gastronomia de luxo (dólares) — gastronomia
+
+insert into public.questions
+  (prompt, answer, unit, theme, difficulty, source_name, source_url, as_of_year, status)
+values
+
+-- Família 1: duração (minutos) de longas-metragens incomumente longos
+  ('Sátántangó (1994), de Béla Tarr, é aclamado pela crítica mas raramente exibido em cinemas por causa da duração. Quantos minutos dura o filme, na sua versão integral?',
+   439, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1994, 'pending'),
+  ('Shoah (1985), documentário de Claude Lanzmann sobre o Holocausto, é feito só de entrevistas, sem imagens de arquivo. Quantos minutos dura o filme?',
+   566, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1985, 'pending'),
+  ('Out 1 (1971), de Jacques Rivette, ficou anos sem ser exibido em cópia integral por causa do tamanho. Quantos minutos dura o filme?',
+   773, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1971, 'pending'),
+  ('La Flor (2018), do argentino Mariano Llinás, levou mais de uma década pra ser filmado, em episódios. Quantos minutos dura o filme, somando todas as partes?',
+   808, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2018, 'pending'),
+  ('Napoleon (1927), de Abel Gance, é um marco do cinema mudo francês que ganhou uma restauração de longa duração décadas depois do lançamento. Quantos minutos dura a versão restaurada mais difundida hoje?',
+   330, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1927, 'pending'),
+  ('A trilogia "A Condição Humana" (1959-1961), do japonês Masaki Kobayashi, foi lançada em três partes hoje vistas como uma obra só. Quantos minutos dura a soma das três partes?',
+   579, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1961, 'pending'),
+  ('Fanny e Alexander (1982), de Ingmar Bergman, teve uma versão de cinema mais curta e uma versão original feita para a TV sueca. Quantos minutos dura a versão original de TV?',
+   312, 'minutos', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1982, 'pending'),
+  ('Decálogo (1988), do polonês Krzysztof Kieślowski, é dividido em dez episódios de cerca de uma hora, um pra cada mandamento bíblico. Quantos minutos dura a série somando os dez episódios?',
+   572, 'minutos', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1988, 'pending'),
+  ('Berlin Alexanderplatz (1980), minissérie de Rainer Werner Fassbinder, costuma ser tratada por críticos de cinema como um longa-metragem só. Quantos minutos dura a obra completa?',
+   931, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1980, 'pending'),
+  ('Heimat (1984), do alemão Edgar Reitz, acompanha uma família alemã ao longo de décadas numa única minissérie tratada como filme. Quantos minutos dura essa primeira "Heimat" completa?',
+   924, 'minutos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1984, 'pending'),
+
+-- Família 2: tiragem da primeira edição de livros hoje consagrados
+  ('Ulysses, de James Joyce, foi publicado em 1922 pela pequena livraria parisiense Shakespeare and Company, sem nenhuma editora grande interessada. Quantos exemplares teve a tiragem original?',
+   1000, 'exemplares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1922, 'pending'),
+  ('O Hobbit, de J.R.R. Tolkien, saiu em 1937 pela editora britânica Allen & Unwin sem grandes expectativas de venda. Quantos exemplares teve a primeira tiragem?',
+   1500, 'exemplares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1937, 'pending'),
+  ('Orgulho e Preconceito, de Jane Austen, foi publicado em 1813 de forma anônima, assinado só como "por uma dama". Quantos exemplares teve a primeira tiragem?',
+   1500, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1813, 'pending'),
+  ('Frankenstein, de Mary Shelley, saiu em 1818 também de forma anônima, sem o nome da autora na capa. Quantos exemplares teve a primeira tiragem?',
+   500, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1818, 'pending'),
+  ('Moby Dick, de Herman Melville, foi um fracasso comercial na sua publicação americana de 1851. Quantos exemplares teve a primeira tiragem americana?',
+   2915, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1851, 'pending'),
+  ('Alice no País das Maravilhas, de Lewis Carroll, teve a tiragem de 1865 retirada de circulação pelo próprio autor por causa de um defeito na impressão das ilustrações. Quantos exemplares tinha essa tiragem original retirada?',
+   2000, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1865, 'pending'),
+  ('Cem Anos de Solidão, de Gabriel García Márquez, foi lançado em 1967 pela editora argentina Sudamericana sem garantia nenhuma de que venderia fora da Colômbia. Quantos exemplares teve a primeira tiragem?',
+   8000, 'exemplares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1967, 'pending'),
+  ('Pé na Estrada (On the Road), de Jack Kerouac, saiu em 1957 pela editora americana Viking depois de anos sendo rejeitado por outras editoras. Quantos exemplares teve a primeira tiragem?',
+   1500, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1957, 'pending'),
+  ('O Apanhador no Campo de Centeio, de J.D. Salinger, foi publicado em 1951 pela editora Little, Brown and Company. Quantos exemplares teve a primeira tiragem?',
+   5000, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1951, 'pending'),
+  ('Duna, de Frank Herbert, foi recusado por mais de vinte editoras de ficção científica antes de sair em 1965 pela Chilton, uma editora conhecida por manuais de carro. Quantos exemplares teve a primeira tiragem?',
+   2200, 'exemplares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1965, 'pending'),
+
+-- Família 3: indicações ao Oscar recebidas sem nenhuma vitória (recordistas)
+  ('Glenn Close nunca venceu um Oscar de atuação, apesar de ser uma das atrizes mais indicadas da história. Quantas indicações ao Oscar ela soma até hoje, sem nenhuma vitória?',
+   8, 'indicações', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Peter O''Toole competiu várias vezes pelo Oscar de melhor ator e nunca venceu na categoria competitiva, só recebendo um Oscar honorário anos depois. Quantas indicações competitivas ele somou ao todo?',
+   8, 'indicações', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2003, 'pending'),
+  ('Thelma Ritter foi indicada ao Oscar de atriz coadjuvante várias vezes ao longo dos anos 1950, sem nunca vencer. Quantas indicações ela somou ao todo?',
+   6, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1962, 'pending'),
+  ('Deborah Kerr foi indicada ao Oscar de melhor atriz seis vezes entre os anos 1950 e 1960, sem nenhuma vitória competitiva. Quantas indicações ela somou ao todo?',
+   6, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1969, 'pending'),
+  ('Kevin O''Connell trabalhou como técnico de som em dezenas de filmes de grande orçamento em Hollywood. Quantas indicações ao Oscar de melhor som ele somou antes de finalmente vencer uma vez?',
+   20, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2016, 'pending'),
+  ('Greg P. Russell também é misturador de som e um dos nomes mais indicados da categoria sem nunca ter vencido. Quantas indicações ao Oscar de som ele soma até hoje?',
+   16, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Alex North compôs a trilha de filmes como "Um Bonde Chamado Desejo" e "Cleópatra", mas nunca venceu o Oscar de trilha sonora na categoria competitiva. Quantas indicações competitivas ele somou ao todo?',
+   15, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1986, 'pending'),
+  ('Roger Deakins é considerado um dos maiores diretores de fotografia vivos, mas levou anos pra vencer seu primeiro Oscar. Quantas indicações ao Oscar de fotografia ele somou antes dessa primeira vitória?',
+   13, 'indicações', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2018, 'pending'),
+  ('Randy Newman compôs trilhas e canções pra dezenas de filmes de animação antes de vencer seu primeiro Oscar competitivo. Quantas indicações ele somou antes dessa primeira vitória?',
+   15, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2001, 'pending'),
+  ('Thomas Newman, da mesma família de compositores de Randy Newman, é um dos nomes mais indicados ao Oscar de trilha sonora sem nenhuma vitória até hoje. Quantas indicações ele soma?',
+   15, 'indicações', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 4: semanas somadas na parada de álbuns (Billboard/UK), contando reentradas
+  ('The Dark Side of the Moon, do Pink Floyd (1973), é um dos álbuns mais vendidos da história e ficou anos entrando e saindo da parada americana. Quantas semanas ao todo ele já somou na Billboard 200, contando todas as reentradas?',
+   950, 'semanas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Legend, coletânea de grandes sucessos de Bob Marley (1984), se tornou um dos álbuns mais duradouros da história nas paradas britânicas. Quantas semanas ao todo ele já somou na parada de álbuns do Reino Unido?',
+   900, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Greatest Hits, do Journey (1988), voltou a vender bem décadas depois do lançamento graças ao streaming. Quantas semanas ao todo ele já somou na Billboard 200?',
+   700, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O "Álbum Preto", do Metallica (1991), é o disco de maior sucesso comercial da banda. Quantas semanas ao todo ele já somou na Billboard 200?',
+   600, 'semanas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('Bat Out of Hell, de Meat Loaf (1977), vendeu de forma lenta e constante por décadas no Reino Unido. Quantas semanas ao todo ele já somou na parada britânica de álbuns?',
+   500, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Tapestry, de Carole King (1971), foi um dos discos mais duradouros nas paradas americanas dos anos 1970. Quantas semanas ao todo ele somou na Billboard 200?',
+   300, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2021, 'pending'),
+  ('A trilha sonora de "Bodyguard - O Guarda-Costas" (1992), com Whitney Houston, vendeu de forma constante por vários anos seguidos. Quantas semanas ao todo ela já somou na Billboard 200?',
+   200, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('21, de Adele (2011), dominou as paradas britânicas por um período incomumente longo. Quantas semanas ao todo ele já somou na parada de álbuns do Reino Unido?',
+   250, 'semanas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('Nevermind, do Nirvana (1991), continuou vendendo bem anos depois da morte de Kurt Cobain. Quantas semanas ao todo ele já somou na Billboard 200?',
+   400, 'semanas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Rumours, do Fleetwood Mac (1977), é um dos álbuns mais vendidos de todos os tempos e voltou às paradas várias vezes ao longo das décadas. Quantas semanas ao todo ele já somou na Billboard 200?',
+   950, 'semanas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 5: número de prêmios Grammy vencidos na carreira
+  ('Georg Solti foi maestro da Orquestra Sinfônica de Chicago e é o maior vencedor de Grammy da história em número total de prêmios. Quantos Grammys ele venceu ao longo da carreira?',
+   31, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1997, 'pending'),
+  ('Quincy Jones trabalhou como produtor, arranjador e compositor em dezenas de discos de gêneros diferentes ao longo de décadas. Quantos Grammys ele venceu ao todo?',
+   28, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Alison Krauss é uma das artistas de bluegrass mais premiadas da história do Grammy. Quantos Grammys ela venceu ao todo?',
+   27, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Pierre Boulez foi maestro e compositor francês, premiado várias vezes por gravações de música clássica contemporânea. Quantos Grammys ele venceu ao todo?',
+   26, 'grammys', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2012, 'pending'),
+  ('John Williams compôs trilhas de dezenas de filmes ao longo de mais de meio século de carreira. Quantos Grammys ele venceu ao todo?',
+   25, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Stevie Wonder é um dos artistas de música popular mais premiados pelo Grammy na categoria de álbum do ano. Quantos Grammys ele venceu ao todo?',
+   25, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Chick Corea foi um dos pianistas de jazz mais premiados pelo Grammy ao longo da carreira. Quantos Grammys ele venceu ao todo?',
+   23, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2021, 'pending'),
+  ('Vladimir Horowitz foi um dos pianistas clássicos mais premiados pelo Grammy no século 20. Quantos Grammys ele venceu ao todo?',
+   25, 'grammys', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1989, 'pending'),
+  ('Henry Mancini compôs trilhas de filmes e temas de TV que ficaram famosos por décadas. Quantos Grammys ele venceu ao todo?',
+   20, 'grammys', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1994, 'pending'),
+  ('Leonard Bernstein foi maestro, compositor e uma das figuras mais conhecidas da música clássica americana no século 20. Quantos Grammys ele venceu ao todo?',
+   16, 'grammys', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1990, 'pending'),
+
+-- Família 6: número de idiomas para os quais uma obra literária já foi traduzida
+  ('O Pequeno Príncipe, de Antoine de Saint-Exupéry (1943), é considerado o livro não religioso mais traduzido da história. Para quantos idiomas e dialetos diferentes ele já foi traduzido?',
+   600, 'idiomas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Pinóquio, de Carlo Collodi (1883), é um dos clássicos infantis mais traduzidos do mundo. Para quantos idiomas ele já foi traduzido?',
+   260, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Alice no País das Maravilhas, de Lewis Carroll (1865), também está entre os livros infantis mais traduzidos da história. Para quantos idiomas ele já foi traduzido?',
+   170, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Dom Quixote, de Miguel de Cervantes (1605), é considerado o romance mais influente da língua espanhola. Para quantos idiomas ele já foi traduzido?',
+   145, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('As Aventuras de Tintim, história em quadrinhos belga criada por Hergé, circula em dezenas de países. Para quantos idiomas e dialetos a coleção já foi traduzida?',
+   120, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Alquimista, de Paulo Coelho (1988), é o livro brasileiro mais traduzido da história. Para quantos idiomas ele já foi traduzido?',
+   80, 'idiomas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Diário de Anne Frank (1947) circula em edições escolares em dezenas de países. Para quantos idiomas ele já foi traduzido?',
+   70, 'idiomas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Asterix, história em quadrinhos francesa criada por Goscinny e Uderzo, é um dos maiores sucessos de quadrinhos europeus fora dos super-heróis americanos. Para quantos idiomas e dialetos a coleção já foi traduzida?',
+   115, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Livro da Selva, de Rudyard Kipling (1894), circula em edições infantis e adultas pelo mundo todo. Para quantos idiomas ele já foi traduzido?',
+   60, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A Volta ao Mundo em 80 Dias, de Júlio Verne (1872), é um dos romances de aventura mais reeditados da história. Para quantos idiomas ele já foi traduzido?',
+   90, 'idiomas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 7: horas para completar 100% (completionist) de jogos de mundo aberto/RPG
+  ('The Witcher 3: Wild Hunt, com as duas expansões incluídas, é um dos RPGs mais extensos já lançados. Quantas horas em média um jogador leva pra completar o jogo 100%, segundo levantamentos de jogadores?',
+   173, 'horas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2016, 'pending'),
+  ('Red Dead Redemption 2 tem um mundo aberto detalhado com dezenas de atividades secundárias. Quantas horas em média leva pra completar o jogo 100%?',
+   155, 'horas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2018, 'pending'),
+  ('Elden Ring tem um mapa aberto enorme dividido em várias regiões distintas. Quantas horas em média leva pra completar o jogo 100%?',
+   130, 'horas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Xenoblade Chronicles 3 é um RPG japonês de mundo aberto com dezenas de missões paralelas. Quantas horas em média leva pra completar o jogo 100%?',
+   140, 'horas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Persona 5 Royal mistura simulador social com dungeon crawler e tem um calendário inteiro pra cumprir. Quantas horas em média leva pra completar o jogo 100%?',
+   120, 'horas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+  ('Divinity: Original Sin 2 é um RPG tático elogiado pela quantidade de conteúdo opcional. Quantas horas em média leva pra completar o jogo 100%?',
+   150, 'horas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2017, 'pending'),
+  ('Yakuza: Like a Dragon troca o combate corpo a corpo da série por batalhas em turnos, mas mantém a quantidade enorme de conteúdo secundário da franquia. Quantas horas em média leva pra completar o jogo 100%?',
+   80, 'horas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('Xenoblade Chronicles 2 tem um sistema de armas vivas, as "Lâminas", que por si só exige dezenas de horas extras pra colecionar. Quantas horas em média leva pra completar o jogo 100%?',
+   150, 'horas', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2017, 'pending'),
+  ('Final Fantasy VII Remake Intergrade cobre só a primeira parte da história original, mas ainda assim tem bastante conteúdo opcional. Quantas horas em média leva pra completar o jogo 100%?',
+   60, 'horas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2021, 'pending'),
+  ('Disco Elysium é elogiado pela profundidade de texto e diálogo, apesar de não ter um mundo tão grande fisicamente. Quantas horas em média leva pra completar o jogo 100%?',
+   30, 'horas', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+
+-- Família 8: número total de episódios/capítulos de séries e novelas de longuíssima duração
+  ('Coronation Street, novela britânica no ar desde 1960, é considerada a série de ficção mais antiga em produção contínua da TV mundial. Quantos episódios ela já somou ao todo?',
+   11000, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('General Hospital, soap opera americana no ar desde 1963, é uma das mais longevas da TV dos Estados Unidos. Quantos episódios ela já somou ao todo?',
+   15000, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('The Bold and the Beautiful, soap opera americana mais recente que General Hospital, também acumulou décadas de episódios diários. Quantos episódios ela já somou ao todo?',
+   9200, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Days of Our Lives, outra soap opera americana clássica, também é exibida quase todo dia útil desde os anos 1960. Quantos episódios ela já somou ao todo?',
+   14000, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Vila Sésamo (Sesame Street), programa infantil educativo americano no ar desde 1969, é um dos programas de TV infantil mais longevos do mundo. Quantos episódios ele já somou ao todo?',
+   4600, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Avenida Brasil (2012), novela brasileira de sucesso da Globo, teve uma das durações mais comentadas da década. Quantos capítulos ela teve ao todo?',
+   179, 'capítulos', 'cultura', 1, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2012, 'pending'),
+  ('Chiquititas, novela infantil que rodou várias versões desde os anos 1990, também acumulou muitos capítulos em cada versão. Quantos capítulos teve a versão brasileira original da Record?',
+   300, 'capítulos', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1997, 'pending'),
+  ('Vale Tudo (1988), novela brasileira que marcou época pela crítica social, teve uma das durações mais longas da faixa das nove da Globo. Quantos capítulos ela teve ao todo?',
+   197, 'capítulos', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1989, 'pending'),
+  ('Oshin, novela matinal japonesa ("asadora") da emissora NHK, é uma das produções mais assistidas da história da televisão japonesa. Quantos episódios ela teve ao todo?',
+   297, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 1984, 'pending'),
+  ('Coronation Street divide o recorde de longevidade mundial com poucas outras produções; sua concorrente direta Emmerdale também está no ar desde os anos 1970. Quantos episódios Emmerdale já somou ao todo?',
+   10500, 'episódios', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 9: preço recorde de leilão de peça de vestuário/acessório icônico (dólares)
+  ('O vestido usado por Marilyn Monroe para cantar "Parabéns, Sr. Presidente" pra John Kennedy em 1962 foi a leilão décadas depois e virou uma das peças de moda mais caras já vendidas. Por quantos dólares ele foi arrematado?',
+   4810000, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2016, 'pending'),
+  ('As sapatilhas de rubi usadas por Judy Garland em "O Mágico de Oz" (1939) também foram a leilão décadas depois. Por quantos dólares um dos pares originais foi arrematado?',
+   3000000, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('A jaqueta de couro usada por Michael Jackson no clipe de "Thriller" (1983) também virou peça de leilão de memorabilia pop. Por quantos dólares ela foi arrematada?',
+   1800000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2011, 'pending'),
+  ('O vestido preto usado por Audrey Hepburn em "Bonequinha de Luxo" (1961) foi um dos primeiros figurinos de cinema a virar peça de leilão de moda. Por quantos dólares ele foi arrematado?',
+   800000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2006, 'pending'),
+  ('Um dos vestidos usados pela Princesa Diana em eventos oficiais também foi a leilão anos depois da sua morte. Por quantos dólares ele foi arrematado?',
+   1150000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('A guitarra usada por Kurt Cobain na apresentação do Nirvana no "MTV Unplugged" (1993) foi a leilão décadas depois. Por quantos dólares ela foi arrematada?',
+   6000000, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('A camisa usada por Freddie Mercury no show do Live Aid (1985) também virou peça de leilão de memorabilia musical. Por quantos dólares ela foi arrematada?',
+   300000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+  ('Um par de luvas de boxe usadas por Muhammad Ali numa de suas lutas mais famosas foi a leilão décadas depois. Por quantos dólares ele foi arrematado?',
+   950000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('O chapéu usado por Indiana Jones (Harrison Ford) num dos filmes da franquia também virou peça de leilão de cinema. Por quantos dólares ele foi arrematado?',
+   500000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2021, 'pending'),
+  ('O uniforme completo usado por Babe Ruth numa das temporadas do New York Yankees foi a leilão e virou uma das peças esportivas mais caras já vendidas. Por quantos dólares ele foi arrematado?',
+   5600000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+
+-- Família 10: preço recorde de item de gastronomia de luxo (dólares)
+  ('Uma garrafa da safra 1945 do vinho Romanée-Conti, um dos mais raros da Borgonha, se tornou a garrafa de vinho mais cara já vendida em leilão. Por quantos dólares ela foi arrematada?',
+   558000, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2018, 'pending'),
+  ('A trufa branca de Alba, iguaria rara da culinária italiana colhida no outono, já teve exemplares gigantes vendidos por valores recordes em leilões beneficentes. Por quantos dólares o maior exemplar já foi vendido?',
+   330000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2014, 'pending'),
+  ('A melancia Densuke, variedade rara cultivada só na ilha japonesa de Hokkaido, costuma bater recordes de preço em leilões de produtores. Por quantos dólares a unidade mais cara já foi vendida?',
+   6100, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+  ('O melão Yubari King, variedade japonesa premium cultivada em estufa, também é disputado em leilões de primeira colheita todo ano. Por quantos dólares o par mais caro já foi vendido?',
+   45000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+  ('O primeiro atum rabilho leiloado no início do ano no mercado de peixe de Tóquio costuma bater recordes de preço por causa da disputa simbólica entre restaurantes. Por quantos dólares o exemplar mais caro já foi vendido?',
+   3100000, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2019, 'pending'),
+  ('A manga japonesa "Ovo do Sol" (Taiyo no Tamago), cultivada na província de Miyazaki, é considerada uma das frutas mais caras do mundo por unidade. Por quantos dólares o par mais caro já foi vendido em leilão?',
+   2700, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2021, 'pending'),
+  ('A uva japonesa Ruby Roman, cultivada na província de Ishikawa, também costuma bater recordes de preço por cacho em leilões anuais. Por quantos dólares o cacho mais caro já foi vendido?',
+   10800, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('O queijo Pule, feito com leite de burra sérvia numa reserva natural da Sérvia, é considerado o queijo mais caro do mundo por quilo. Por quantos dólares custa um quilo dele?',
+   1000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2018, 'pending'),
+  ('O café Black Ivory, produzido na Tailândia a partir de grãos que passam pelo sistema digestivo de elefantes, é um dos cafés mais caros do mundo por quilo. Por quantos dólares custa um quilo dele?',
+   2500, 'dólares', 'cultura', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2020, 'pending'),
+  ('O maior bolo de casamento já registrado como o mais caro do mundo foi feito pra uma celebração de luxo, com ingredientes raros incrustados de joias comestíveis. Por quantos dólares ele foi avaliado?',
+   20000000, 'dólares', 'cultura', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2015, 'pending');
