@@ -1,0 +1,247 @@
+-- RASCUNHO NÃO VERIFICADO. Todas as ~100 linhas abaixo foram escritas de memória, sem pesquisa
+-- (sem WebSearch/WebFetch) — é geração de volume de candidatos, não curadoria. Todo `answer` é
+-- estimativa educada; toda `source_name`/`source_url` é placeholder. status = 'pending' em toda
+-- linha; start_round só sorteia status = 'approved', então nada aqui entra em partida real antes
+-- de uma sessão futura confirmar cada número com fonte real e decidir aprovar/rejeitar (mesmo
+-- processo usado em futebol_25.sql e brasil_01.sql).
+--
+-- Não repete fato-base nem molde já usado em supabase/seed.sql ou supabase/seeds/brasil_01.sql
+-- (população de SP, municípios do Tocantins, notas de R$100, frota de veículos, fronteira
+-- terrestre total, menor temperatura registrada, malha rodoviária pavimentada, expectativa de
+-- vida nacional, unidades de conservação do ICMBio).
+--
+-- Famílias incluídas (cada uma cobre 1 métrica, variando o sujeito — produto/estado/instituição):
+--   1.  Valor exportado (US$ milhões) por produto agropecuário/mineral — economia/comércio exterior
+--   2.  Rebanho bovino (cabeças de gado) por estado — agropecuária
+--   3.  Leitos hospitalares do SUS por estado — saúde
+--   4.  Matrículas totais em universidade federal — educação
+--   5.  Área desmatada acumulada na Amazônia Legal por estado (km²) — meio ambiente
+--   6.  Capacidade instalada (MW) de usina hidrelétrica — infraestrutura/energia
+--   7.  Falantes de língua indígena, por etnia — cultura/idioma
+--   8.  Movimentação de carga anual (milhões de toneladas) por porto — infraestrutura/comércio
+--   9.  Força de trabalho ocupada por estado — trabalho
+--   10. Idade mediana da população por estado — demografia
+
+insert into public.questions
+  (prompt, answer, unit, theme, difficulty, source_name, source_url, as_of_year, status)
+values
+
+-- Família 1: valor exportado (US$ milhões) por produto agropecuário/mineral
+  ('O Brasil é o maior exportador mundial de soja. Quanto o país exportou em valor, em milhões de dólares, só com soja em grão no último ano?',
+   46600, 'milhões de dólares', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o segundo maior exportador mundial de minério de ferro, atrás só da Austrália. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   37000, 'milhões de dólares', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o maior exportador mundial de celulose de eucalipto. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   9000, 'milhões de dólares', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o maior exportador mundial de carne bovina. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   10500, 'milhões de dólares', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o maior exportador mundial de açúcar. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   12000, 'milhões de dólares', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o maior exportador mundial de café. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   8000, 'milhões de dólares', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é o segundo maior exportador mundial de milho, atrás só dos Estados Unidos. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   10000, 'milhões de dólares', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil é um dos maiores exportadores mundiais de algodão em pluma. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   3500, 'milhões de dólares', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil hoje exporta bem mais petróleo bruto do que importa. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   40000, 'milhões de dólares', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Brasil produz a maior parte do suco de laranja consumido no mundo. Quanto exportou em valor, em milhões de dólares, no último ano?',
+   2000, 'milhões de dólares', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+
+-- Família 2: rebanho bovino (cabeças de gado) por estado
+  ('O Mato Grosso tem o maior rebanho bovino do Brasil. Quantas cabeças de gado o estado tem hoje?',
+   34000000, 'cabeças de gado', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Pará virou uma das fronteiras da pecuária na Amazônia nas últimas décadas. Quantas cabeças de gado o estado tem hoje?',
+   25000000, 'cabeças de gado', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Mato Grosso do Sul tem economia fortemente apoiada na pecuária de corte. Quantas cabeças de gado o estado tem hoje?',
+   23000000, 'cabeças de gado', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('Goiás é um dos grandes polos de pecuária de corte do Centro-Oeste. Quantas cabeças de gado o estado tem hoje?',
+   22000000, 'cabeças de gado', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('Minas Gerais soma pecuária de corte e de leite em escala grande. Quantas cabeças de gado o estado tem hoje?',
+   21000000, 'cabeças de gado', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('A Bahia é o maior estado do Nordeste em área e também tem rebanho bovino relevante. Quantas cabeças de gado o estado tem hoje?',
+   11000000, 'cabeças de gado', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Rio Grande do Sul tem tradição histórica de pecuária extensiva, ligada à cultura gaúcha. Quantas cabeças de gado o estado tem hoje?',
+   13000000, 'cabeças de gado', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('Rondônia expandiu bastante a pecuária de corte dentro da Amazônia nas últimas décadas. Quantas cabeças de gado o estado tem hoje?',
+   14000000, 'cabeças de gado', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('São Paulo é o estado mais rico do Brasil, mas a pecuária não é seu principal setor agropecuário. Quantas cabeças de gado o estado tem hoje?',
+   10000000, 'cabeças de gado', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Tocantins, um dos estados mais novos do Brasil, tem parte da economia apoiada na pecuária. Quantas cabeças de gado o estado tem hoje?',
+   9000000, 'cabeças de gado', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+
+-- Família 3: leitos hospitalares do SUS por estado
+  ('São Paulo é o estado mais populoso do Brasil e concentra a maior rede hospitalar do SUS. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   90000, 'leitos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Minas Gerais é o segundo estado mais populoso do país. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   45000, 'leitos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Rio de Janeiro concentra grandes hospitais públicos de referência nacional. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   35000, 'leitos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A Bahia é o estado mais populoso do Nordeste. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   30000, 'leitos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Rio Grande do Sul tem uma rede hospitalar pública espalhada por muitos municípios pequenos. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   27000, 'leitos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Paraná é um dos estados mais populosos do Sul do país. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   25000, 'leitos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Pernambuco concentra grande parte da rede hospitalar pública do Nordeste, puxada por Recife. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   20000, 'leitos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Ceará é um dos estados mais populosos do Nordeste. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   18000, 'leitos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Pará é o estado mais populoso da região Norte. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   15000, 'leitos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Amazonas é o maior estado do Brasil em área, mas com rede hospitalar concentrada quase toda em Manaus. Quantos leitos hospitalares do SUS o estado tem hoje?',
+   9000, 'leitos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 4: matrículas totais em universidade federal (graduação + pós-graduação)
+  ('A UFRJ é uma das universidades federais mais tradicionais do Brasil. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   55000, 'alunos matriculados', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFMG é uma das maiores universidades federais do país. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   50000, 'alunos matriculados', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFBA é a maior universidade federal do Nordeste. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   35000, 'alunos matriculados', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UnB foi criada nos anos 1960 junto com a nova capital federal. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   40000, 'alunos matriculados', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFPA é a maior universidade federal da região Norte. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   40000, 'alunos matriculados', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFPE é uma das principais universidades federais do Nordeste. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   30000, 'alunos matriculados', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFRGS é a principal universidade federal do Sul do país. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   32000, 'alunos matriculados', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFC é a principal universidade federal do Ceará. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   30000, 'alunos matriculados', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFSC fica em Florianópolis e é uma das universidades federais mais bem avaliadas do país. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   30000, 'alunos matriculados', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A UFRN é a principal universidade federal do Rio Grande do Norte. Quantos alunos ela tem matriculados hoje, somando graduação e pós-graduação?',
+   28000, 'alunos matriculados', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 5: área desmatada acumulada na Amazônia Legal por estado (km²)
+  ('O Pará é o estado que mais desmata dentro da Amazônia Legal brasileira. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   230000, 'km²', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Mato Grosso é um dos estados que mais avançou com agropecuária sobre a Amazônia Legal. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   180000, 'km²', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Maranhão faz parte da Amazônia Legal, na sua porção mais a leste. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   90000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Rondônia teve uma das frentes de desmatamento mais intensas da Amazônia a partir dos anos 1980. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   85000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Amazonas é o maior estado do Brasil em área, mas ainda concentra proporcionalmente pouco desmatamento perto do seu tamanho total. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   50000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Acre é um dos estados menores da Amazônia Legal em área. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   20000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Roraima é um dos estados menos povoados da Amazônia Legal. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   15000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Tocantins entra na Amazônia Legal mesmo tendo parte do território já em transição pro Cerrado. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   20000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Amapá é um dos estados da Amazônia Legal com maior proporção de floresta ainda intacta. Quantos km² de floresta o estado já perdeu ao todo, somando toda a série histórica?',
+   3000, 'km²', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A Amazônia Legal reúne nove estados brasileiros. Somando todos eles, quantos km² de floresta já foram desmatados ao todo, na série histórica completa?',
+   830000, 'km²', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 6: capacidade instalada (MW) de usina hidrelétrica
+  ('Itaipu fica no rio Paraná, na fronteira entre Brasil e Paraguai, e já foi a maior hidrelétrica do mundo. Qual a capacidade instalada dela, em megawatts?',
+   14000, 'megawatts', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Belo Monte fica no rio Xingu, no Pará, e foi um dos projetos de infraestrutura mais controversos do país. Qual a capacidade instalada dela, em megawatts?',
+   11233, 'megawatts', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Tucuruí, no Pará, foi a primeira grande hidrelétrica construída dentro da Amazônia brasileira. Qual a capacidade instalada dela, em megawatts?',
+   8535, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Jirau fica no rio Madeira, em Rondônia, uma das hidrelétricas mais recentes do país. Qual a capacidade instalada dela, em megawatts?',
+   3750, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Santo Antônio também fica no rio Madeira, perto de Porto Velho. Qual a capacidade instalada dela, em megawatts?',
+   3568, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Ilha Solteira fica no rio Paraná, na divisa entre São Paulo e Mato Grosso do Sul. Qual a capacidade instalada dela, em megawatts?',
+   3444, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Xingó fica no rio São Francisco, na divisa entre Alagoas e Sergipe. Qual a capacidade instalada dela, em megawatts?',
+   3162, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Itumbiara fica no rio Paranaíba, na divisa entre Goiás e Minas Gerais. Qual a capacidade instalada dela, em megawatts?',
+   2082, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Governador Bento Munhoz, no rio Iguaçu, é uma das principais hidrelétricas do Paraná. Qual a capacidade instalada dela, em megawatts?',
+   1676, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Sobradinho, na Bahia, também formou um dos maiores lagos artificiais do mundo em área. Qual a capacidade instalada dela, em megawatts?',
+   1050, 'megawatts', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 7: falantes de língua indígena, por etnia
+  ('O guarani é uma das línguas indígenas mais faladas do Brasil, presente em vários estados do Sul e Sudeste. Quantas pessoas falam guarani no país hoje?',
+   40000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os tikuna formam a maior etnia indígena do Brasil, concentrada no Amazonas. Quantas pessoas falam a língua tikuna hoje?',
+   35000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os kaingang estão entre os povos indígenas mais numerosos do Sul do Brasil. Quantas pessoas falam a língua kaingang hoje?',
+   20000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os yanomami vivem numa das maiores terras indígenas do Brasil, na fronteira com a Venezuela. Quantas pessoas falam a língua yanomami hoje?',
+   25000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os macuxi vivem principalmente em Roraima, perto da fronteira com a Guiana e a Venezuela. Quantas pessoas falam a língua macuxi hoje?',
+   25000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os terena vivem principalmente no Mato Grosso do Sul. Quantas pessoas falam a língua terena hoje?',
+   15000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os xavante vivem no Mato Grosso e são conhecidos pela forte resistência cultural. Quantas pessoas falam a língua xavante hoje?',
+   15000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os guajajara formam um dos maiores povos indígenas do Maranhão. Quantas pessoas falam a língua guajajara hoje?',
+   20000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os kayapó vivem numa área extensa entre o Pará e o Mato Grosso. Quantas pessoas falam a língua kayapó hoje?',
+   9000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+  ('Os baniwa vivem no noroeste do Amazonas, perto da fronteira com a Colômbia. Quantas pessoas falam a língua baniwa hoje?',
+   6000, 'falantes', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2022, 'pending'),
+
+-- Família 8: movimentação de carga anual (milhões de toneladas) por porto
+  ('O Porto de Santos é o maior porto da América Latina. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   160, 'milhões de toneladas', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Paranaguá, no Paraná, é um dos maiores escoadouros de grãos do país. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   55, 'milhões de toneladas', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O complexo portuário de Itaguaí, no Rio de Janeiro, escoa grande parte do minério de ferro exportado pela região. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   70, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O complexo portuário de Vitória, no Espírito Santo, escoa boa parte do minério de ferro de Minas Gerais. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   130, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Itaqui, no Maranhão, é a principal porta de saída do Norte-Nordeste para grãos e minério. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   40, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto do Rio Grande, no Rio Grande do Sul, é o principal porto do estado. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   35, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Suape, em Pernambuco, é o principal complexo industrial-portuário do Nordeste. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   20, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Salvador é o principal porto público da Bahia. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   10, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Manaus é a principal porta fluvial de entrada e saída de carga da Amazônia. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   5, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Porto de Belém é um dos principais portos fluviais do Pará. Quantos milhões de toneladas de carga ele movimenta por ano?',
+   5, 'milhões de toneladas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+
+-- Família 9: força de trabalho ocupada por estado (pessoas ocupadas)
+  ('São Paulo é o estado mais populoso do Brasil e também o de maior força de trabalho. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   24000000, 'pessoas ocupadas', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Minas Gerais é o segundo estado mais populoso do país. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   10300000, 'pessoas ocupadas', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Rio de Janeiro tem uma das maiores economias urbanas do país. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   8000000, 'pessoas ocupadas', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('A Bahia é o estado mais populoso do Nordeste. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   6500000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Paraná tem uma das economias industriais e agrícolas mais fortes do Sul do país. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   5800000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Rio Grande do Sul tem uma economia diversificada, da agropecuária à indústria. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   5600000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Pernambuco concentra boa parte da atividade econômica do Nordeste, puxada por Recife. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   4000000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Ceará é um dos estados mais populosos do Nordeste. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   4000000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('O Pará é o estado mais populoso da região Norte. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   3800000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+  ('Santa Catarina tem uma das rendas médias mais altas do país, puxada pela indústria. Quantas pessoas estão ocupadas no mercado de trabalho do estado hoje?',
+   3700000, 'pessoas ocupadas', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2024, 'pending'),
+
+-- Família 10: idade mediana da população por estado (anos)
+  ('Santa Catarina tem uma das rendas médias mais altas do país e uma população relativamente envelhecida para os padrões brasileiros. Qual a idade mediana da população do estado hoje?',
+   35, 'anos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Rio de Janeiro tem uma das populações mais envelhecidas entre os estados brasileiros, com baixa natalidade há décadas. Qual a idade mediana da população do estado hoje?',
+   38, 'anos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Amapá tem uma das populações mais jovens do Brasil, com natalidade bem acima da média nacional. Qual a idade mediana da população do estado hoje?',
+   25, 'anos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('Roraima é um dos estados menos povoados do Brasil e também um dos mais jovens em idade média. Qual a idade mediana da população do estado hoje?',
+   26, 'anos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Pará tem alta natalidade e uma população proporcionalmente jovem para o tamanho do estado. Qual a idade mediana da população do estado hoje?',
+   27, 'anos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Maranhão tem uma das taxas de natalidade mais altas do país. Qual a idade mediana da população do estado hoje?',
+   26, 'anos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Rio Grande do Sul tem uma das populações mais envelhecidas do país, com baixa natalidade há muitas décadas. Qual a idade mediana da população do estado hoje?',
+   37, 'anos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('São Paulo, apesar de ser o estado mais populoso do país, também já tem uma população relativamente envelhecida. Qual a idade mediana da população do estado hoje?',
+   35, 'anos', 'brasil', 2, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Amazonas é o maior estado do Brasil em área e tem população proporcionalmente jovem. Qual a idade mediana da população do estado hoje?',
+   27, 'anos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending'),
+  ('O Piauí é um dos estados mais pobres do país e tem população relativamente jovem. Qual a idade mediana da população do estado hoje?',
+   29, 'anos', 'brasil', 3, 'NÃO VERIFICADO — número candidato, pendente de curadoria', 'pending://sem-fonte-verificada', 2023, 'pending');
